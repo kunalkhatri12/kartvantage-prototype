@@ -24,8 +24,12 @@ The build reports only React Router v8 future-flag notices and an empty authenti
 
 The first narrow capture exposed horizontal overflow caused by intrinsic content width. The panel, typography, form, and compact breakpoints were corrected; the evidence files are the post-fix captures.
 
-## Open Shopify gate
+## Shopify linkage and open gate
 
-`shopify app config validate --json` stopped before validation because the intentionally blank `client_id` requires `shopify app config link --client-id ...` in a non-interactive terminal or an interactive `shopify app config link` selection.
+- The owner selected the existing, non-live KartVantage app identity used only by test stores.
+- `shopify app config link` linked the greenfield repository to `Kartvantage` in `eWebster Infotech`.
+- The linked development store is `kartvantage.myshopify.com`; Shopify reports the app is installed.
+- The replacement C1 configuration requests zero merchant-data scopes, contains no webhook subscriptions, targets API version `2026-07`, and passes `shopify app config validate --json` with zero issues.
+- `shopify app dev --store kartvantage.myshopify.com` reached `Ready, watching for changes` and supplied this Admin preview URL: `https://admin.shopify.com/store/kartvantage/apps/5ca440f2f13e539ffbd1418df67dc373?dev-console=show`.
 
-No Dev Dashboard app, development store, or production resource has been changed. C1 must remain in progress until the owner chooses the correct greenfield app linkage, configuration validation passes, and store/app verification links are captured.
+The browser is paused at Shopify authentication, which the owner must complete. No app version has been released. The active app home still points to the old Render URL, so a permanent greenfield hosting destination must be established before replacing the released Dev Dashboard version.

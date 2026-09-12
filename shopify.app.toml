@@ -1,9 +1,21 @@
-# This file stores configurations for your Shopify app.
-client_id = ""
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
+
+client_id = "5ca440f2f13e539ffbd1418df67dc373"
+name = "KartVantage"
+handle = "kartvantage"
+application_url = "https://kartvantage.onrender.com"
+embedded = true
 
 [access_scopes]
-# Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
+# C1 intentionally requests no merchant data. Later packages add only approved scopes.
 scopes = ""
 
 [webhooks]
 api_version = "2026-07"
+
+[auth]
+# `shopify app dev` replaces these with the active development tunnel URLs.
+redirect_urls = ["https://kartvantage.onrender.com/auth/callback"]
+
+[build]
+automatically_update_urls_on_dev = true

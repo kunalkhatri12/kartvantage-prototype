@@ -24,8 +24,8 @@ Last updated: 2026-09-12
 
 ## Current boundary requiring the owner
 
-The greenfield configuration has no `client_id`. Shopify configuration validation and store/app verification cannot proceed until the owner chooses whether this repository should link to the existing KartVantage Dev Dashboard app or to a newly created app. Do not infer or reuse a legacy client ID.
+The owner chose the existing non-live KartVantage app identity. The greenfield repository is linked to that app, Shopify configuration validation passes, and a development preview is running for `kartvantage.myshopify.com`. Browser verification is paused at Shopify authentication; Codex must not automate credentials, passkeys, or other login steps.
 
 ## Next safe action
 
-After the owner identifies existing versus new Dev Dashboard app, link interactively or with the exact client ID, validate configuration, run a development preview against the intended KartVantage development store, capture links/evidence, and then request C1 owner acceptance. Do not start C2 automatically.
+After the owner completes Shopify login in the opened browser tab, verify the embedded app, capture visible evidence and console errors, decide the permanent greenfield hosting URL before releasing an app version, and then request C1 owner acceptance. Do not start C2 automatically.

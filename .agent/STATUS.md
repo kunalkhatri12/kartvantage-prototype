@@ -5,7 +5,7 @@
 - Implementation authorization: C1 only, recorded 2026-09-12
 - Local planning tasks: 2 completed and audited
 - Local-agent output: 1,909 tokens total; transcripts/provenance retained under ignored `.agent/runs/`
-- C1: locally validated; Shopify Dev Dashboard linkage and owner acceptance pending
+- C1: linked to the existing non-live Shopify app and locally validated; authenticated test-store UI verification and owner acceptance pending
 - External actions: none; no Shopify resource was created, changed, or deployed
 
 ## C1 evidence checkpoint — 2026-09-12
@@ -20,6 +20,15 @@
 - Prisma generation and the single official session-table migration passed locally.
 - `shopify app config validate --json` correctly stopped because `shopify.app.toml` is intentionally not linked to a Dev Dashboard app.
 - C1 remains open; do not mark complete and do not start C2.
+
+## Existing test app linkage — 2026-09-12
+
+- Linked app: `Kartvantage` / handle `kartvantage` in the `eWebster Infotech` organization.
+- Existing development store: `kartvantage.myshopify.com`; Shopify reports the app is installed.
+- The C1 replacement configuration keeps the existing public app identity, requests zero data scopes, removes old webhook subscriptions, and validates successfully against Shopify.
+- A development preview is running and Shopify supplied the Admin preview URL.
+- Remaining user action: authenticate in the opened Shopify browser tab so Codex can verify the rendered embedded app.
+- No app version was released and the old hosted production-style URL was not replaced yet.
 
 ## G0 audit
 

@@ -1,5 +1,12 @@
 .agent/runs/
+.scaffold-source/
 node_modules/
+.cache/
+.react-router/
+prisma/dev.sqlite
+prisma/dev.sqlite-journal
+public/build/
+*.tsbuildinfo
 .env
 .env.*
 !.env.example
@@ -13,4 +20,3 @@ coverage/
 *client_secret*.json
 *recovery*codes*.txt
 *credentials*.json
-

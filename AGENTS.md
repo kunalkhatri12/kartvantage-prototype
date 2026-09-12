@@ -8,6 +8,8 @@ Read `control/AUTHORITY.md` and the active task before doing any work. Explicit 
 
 The canonical human-readable progress workbook is registered in `control/PROGRESS_DASHBOARD.md`. Only Codex-audited outcomes may be promoted to it.
 
+At the start of every resumed work session, read `control/SESSION_RESUME.md`. Update it whenever the active package, verified evidence, blocker, or next owner action changes.
+
 ## Package boundary
 
 - Work on one explicitly authorized package only.

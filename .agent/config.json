@@ -6,14 +6,16 @@
   "defaultContext": 32768,
   "temperature": 0.1,
   "defaultOutputTokens": 2500,
-  "implementationAuthorized": false,
-  "activePackage": "G0",
+  "implementationAuthorized": true,
+  "activePackage": "C1",
   "authorityFiles": [
     "control/AUTHORITY.md",
     "control/C1_BOUNDARY.md",
     "control/STOREFRONT_ARCHITECTURE.md",
     "control/SHOPIFY_SOURCE_REGISTER.md",
-    "control/COMMUNICATION_PROTOCOL.md"
+    "control/COMMUNICATION_PROTOCOL.md",
+    "control/C1_AUTHORIZATION.md",
+    "control/BRAND_SYSTEM.md"
   ],
   "models": {
     "architecture": "qwen3-coder:30b",

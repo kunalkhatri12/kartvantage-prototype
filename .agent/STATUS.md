@@ -1,12 +1,25 @@
 # Agent status
 
-- Active control package: G0
-- Application code: none
-- Implementation authorization: no
+- Active control package: C1
+- Application code: branded C1 public landing and embedded Admin shell only; no business behavior
+- Implementation authorization: C1 only, recorded 2026-09-12
 - Local planning tasks: 2 completed and audited
 - Local-agent output: 1,909 tokens total; transcripts/provenance retained under ignored `.agent/runs/`
-- C1: prepared but not authorized
-- External actions: none
+- C1: locally validated; Shopify Dev Dashboard linkage and owner acceptance pending
+- External actions: none; no Shopify resource was created, changed, or deployed
+
+## C1 evidence checkpoint — 2026-09-12
+
+- Official Shopify React Router template imported from commit `e548c959eb00460f7141d42bd694cd50769c5e3e`.
+- Shopify API version selected: `2026-07`.
+- Branded public landing and embedded shell implemented from owner-supplied brand assets.
+- Responsive visual QA passed at 1440×1200 and an emulated 390×844 viewport after correcting one overflow defect.
+- Lint, typecheck, four boundary tests, and production build passed.
+- `npm audit` reported zero vulnerabilities across 595 dependencies.
+- Secret-pattern scan and `git diff --check` passed.
+- Prisma generation and the single official session-table migration passed locally.
+- `shopify app config validate --json` correctly stopped because `shopify.app.toml` is intentionally not linked to a Dev Dashboard app.
+- C1 remains open; do not mark complete and do not start C2.
 
 ## G0 audit
 
@@ -14,3 +27,7 @@
 - Rejected as unverified: assumed scaffold commands/packages, hand-designed Vite structure, example API versions, and destructive rollback suggestions.
 - Current official evidence register: `control/SHOPIFY_SOURCE_REGISTER.md`.
 - Decision required later: reconcile the owner's future-theme `C10` label with the frozen register's C11+ theme sequence.
+
+## C1 authorization
+
+The owner instructed Codex on 2026-09-12 to keep going until owner action is needed, while retaining proof, using the supplied brand kit, testing before completion, and providing verification links. This authorizes C1 only under `control/C1_BOUNDARY.md`; it does not authorize C2+, production deployment, billing, or destructive Shopify changes.

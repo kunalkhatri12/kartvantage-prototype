@@ -1,0 +1,12 @@
+:root {
+  --kv-navy: #061529;
+  --kv-lime: #95bf47;
+  --kv-mint: #e7f4ea;
+  --kv-ink: #0f172a;
+  --kv-muted: #5f6b7a;
+  --kv-focus: #2563eb;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; background: #f7f9f8; color: var(--kv-ink); font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+:focus-visible { outline: 3px solid var(--kv-focus); outline-offset: 3px; }

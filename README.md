@@ -6,9 +6,9 @@ The previous repository at `D:\Projects\KartVantage\kart-vantage` is legacy evid
 
 ## Current state
 
-- Package: G0 greenfield control bootstrap complete
-- Application implementation: not started
-- C1 scaffold: prepared, not authorized
+- Package: C1 scaffold and engineering baseline in progress
+- Application implementation: branded C1 shell scaffolded; no business behavior
+- C1 scaffold: locally validated; awaiting Shopify Dev Dashboard app linkage and owner acceptance
 - Production/deployment/billing/external writes: prohibited
 
-See `control/PROGRESS_DASHBOARD.md`, `control/G0_CODEX_SYNTHESIS.md`, `control/AUTHORITY.md`, `control/STOREFRONT_ARCHITECTURE.md`, `control/COMMUNICATION_PROTOCOL.md`, and `.agent/STATUS.md`.
+See `control/SESSION_RESUME.md`, `control/PROGRESS_DASHBOARD.md`, `control/G0_CODEX_SYNTHESIS.md`, `control/AUTHORITY.md`, `control/STOREFRONT_ARCHITECTURE.md`, `control/COMMUNICATION_PROTOCOL.md`, and `.agent/STATUS.md`.

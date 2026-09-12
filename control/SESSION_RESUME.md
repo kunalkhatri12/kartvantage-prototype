@@ -20,12 +20,13 @@ Last updated: 2026-09-12
 - Official Shopify React Router template provenance is recorded in `proof/C1/PROVENANCE.md`.
 - The brand kit is implemented in the public landing and embedded Admin shell.
 - Local checks, security audit, migration, responsive screenshots, and known warnings are recorded in `proof/C1/VALIDATION.md`.
+- The authenticated installed-app preview passed in Shopify Admin; evidence is recorded in `proof/C1/SHOPIFY_PREVIEW.md`.
 - No business rules, theme extension, webhook behavior, billing, or deployment was added.
 
 ## Current boundary requiring the owner
 
-The owner chose the existing non-live KartVantage app identity. The greenfield repository is linked to that app, Shopify configuration validation passes, and a development preview is running for `kartvantage.myshopify.com`. Browser verification is paused at Shopify authentication; Codex must not automate credentials, passkeys, or other login steps.
+The owner chose the existing non-live KartVantage app identity. The greenfield repository is linked to that app, configuration validation passes, and the authenticated development preview renders correctly in `kartvantage.myshopify.com`. A permanent greenfield hosting destination must be selected before the released app version can replace the legacy Render-hosted build.
 
 ## Next safe action
 
-After the owner completes Shopify login in the opened browser tab, verify the embedded app, capture visible evidence and console errors, decide the permanent greenfield hosting URL before releasing an app version, and then request C1 owner acceptance. Do not start C2 automatically.
+Choose and configure permanent greenfield hosting, repeat the relevant production-like checks, replace the Dev Dashboard URLs, and then request C1 owner acceptance. Do not release an app version or start C2 without the applicable authorization.

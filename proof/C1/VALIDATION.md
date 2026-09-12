@@ -32,4 +32,6 @@ The first narrow capture exposed horizontal overflow caused by intrinsic content
 - The replacement C1 configuration requests zero merchant-data scopes, contains no webhook subscriptions, targets API version `2026-07`, and passes `shopify app config validate --json` with zero issues.
 - `shopify app dev --store kartvantage.myshopify.com` reached `Ready, watching for changes` and supplied this Admin preview URL: `https://admin.shopify.com/store/kartvantage/apps/5ca440f2f13e539ffbd1418df67dc373?dev-console=show`.
 
-The browser is paused at Shopify authentication, which the owner must complete. No app version has been released. The active app home still points to the old Render URL, so a permanent greenfield hosting destination must be established before replacing the released Dev Dashboard version.
+Authenticated Shopify Admin verification subsequently passed. The installed app rendered the branded greenfield C1 shell through the Shopify CLI development tunnel, the server authenticated the development store, and browser inspection found no application errors. Detailed evidence is in `SHOPIFY_PREVIEW.md`.
+
+No app version has been released. The active app home still points to the old Render URL, so a permanent greenfield hosting destination must be established before replacing the released Dev Dashboard version.

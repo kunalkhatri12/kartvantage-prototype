@@ -5,8 +5,8 @@
 - Implementation authorization: C1 only, recorded 2026-09-12
 - Local planning tasks: 2 completed and audited
 - Local-agent output: 1,909 tokens total; transcripts/provenance retained under ignored `.agent/runs/`
-- C1: linked to the existing non-live Shopify app and locally validated; authenticated test-store UI verification and owner acceptance pending
-- External actions: none; no Shopify resource was created, changed, or deployed
+- C1: linked, locally validated, and authenticated in the installed test store; permanent hosting and owner acceptance remain open
+- External actions: temporary Shopify development preview activated; no app version released and no production resource changed
 
 ## C1 evidence checkpoint — 2026-09-12
 
@@ -18,7 +18,7 @@
 - `npm audit` reported zero vulnerabilities across 595 dependencies.
 - Secret-pattern scan and `git diff --check` passed.
 - Prisma generation and the single official session-table migration passed locally.
-- `shopify app config validate --json` correctly stopped because `shopify.app.toml` is intentionally not linked to a Dev Dashboard app.
+- The linked replacement configuration passes `shopify app config validate --json` with zero issues.
 - C1 remains open; do not mark complete and do not start C2.
 
 ## Existing test app linkage — 2026-09-12
@@ -27,7 +27,8 @@
 - Existing development store: `kartvantage.myshopify.com`; Shopify reports the app is installed.
 - The C1 replacement configuration keeps the existing public app identity, requests zero data scopes, removes old webhook subscriptions, and validates successfully against Shopify.
 - A development preview is running and Shopify supplied the Admin preview URL.
-- Remaining user action: authenticate in the opened Shopify browser tab so Codex can verify the rendered embedded app.
+- Authenticated Shopify Admin verification passed: the installed test app rendered the greenfield branded C1 shell from the CLI development tunnel, with no application errors.
+- Evidence: `proof/C1/SHOPIFY_PREVIEW.md`.
 - No app version was released and the old hosted production-style URL was not replaced yet.
 
 ## G0 audit

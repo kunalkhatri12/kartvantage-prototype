@@ -11,4 +11,4 @@ The previous repository at `D:\Projects\KartVantage\kart-vantage` is legacy evid
 - C1 scaffold: prepared, not authorized
 - Production/deployment/billing/external writes: prohibited
 
-See `control/G0_CODEX_SYNTHESIS.md`, `control/AUTHORITY.md`, `control/STOREFRONT_ARCHITECTURE.md`, `control/COMMUNICATION_PROTOCOL.md`, and `.agent/STATUS.md`.
+See `control/PROGRESS_DASHBOARD.md`, `control/G0_CODEX_SYNTHESIS.md`, `control/AUTHORITY.md`, `control/STOREFRONT_ARCHITECTURE.md`, `control/COMMUNICATION_PROTOCOL.md`, and `.agent/STATUS.md`.

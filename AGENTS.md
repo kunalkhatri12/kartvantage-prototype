@@ -6,6 +6,8 @@ This directory is the only writable repository for the new KartVantage productio
 
 Read `control/AUTHORITY.md` and the active task before doing any work. Explicit owner instructions, locked dated authority, current official Shopify mechanics, and actual greenfield repository evidence apply in that order. Stop with `DECISION REQUIRED` on a material conflict.
 
+The canonical human-readable progress workbook is registered in `control/PROGRESS_DASHBOARD.md`. Only Codex-audited outcomes may be promoted to it.
+
 ## Package boundary
 
 - Work on one explicitly authorized package only.
@@ -24,4 +26,3 @@ For every Shopify-dependent package, verify current official Shopify documentati
 ## Completion return
 
 Return: verdict, objective, authority checked, evidence, files changed, checks and exact results, Shopify verification, merchant-language impact, security/privacy/tenant impact, rollback, risks, decisions required, and the package stop statement.
-

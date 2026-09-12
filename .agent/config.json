@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "repositoryRoot": "D:\\Projects\\KartVantage\\kartvantage-greenfield",
+  "legacyEvidenceRoot": "D:\\Projects\\KartVantage\\kart-vantage",
+  "ollamaEndpoint": "http://127.0.0.1:11434",
+  "defaultContext": 32768,
+  "temperature": 0.1,
+  "defaultOutputTokens": 2500,
+  "implementationAuthorized": false,
+  "activePackage": "G0",
+  "authorityFiles": [
+    "control/AUTHORITY.md",
+    "control/C1_BOUNDARY.md",
+    "control/STOREFRONT_ARCHITECTURE.md",
+    "control/SHOPIFY_SOURCE_REGISTER.md",
+    "control/COMMUNICATION_PROTOCOL.md"
+  ],
+  "models": {
+    "architecture": "qwen3-coder:30b",
+    "shopify": "shopify-deep:latest",
+    "routine": "shopify-fast:latest",
+    "mechanical": "qwen2.5-coder:7b",
+    "reporter": "llama3.1:8b",
+    "embeddings": "nomic-embed-text:latest"
+  }
+}

@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#061529" />
+    <meta
+      name="description"
+      content="KartVantage complete product experience prototype. All data and actions are simulated."
+    />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'"
+    />
+    <link rel="icon" href="assets/kartvantage-logo.png" />
+    <title>KartVantage — Complete Product Prototype</title>
+    <link rel="stylesheet" href="./prototype.css" />
+  </head>
+  <body>
+    <a class="kv-skip-link" href="#kv-main">Skip to main content</a>
+    <div id="kv-app" aria-live="off"></div>
+    <div id="kv-toast" class="kv-toast-region" aria-live="polite" aria-atomic="true"></div>
+    <div id="kv-modal"></div>
+    <noscript>
+      <p class="kv-noscript">Enable JavaScript to explore the KartVantage prototype.</p>
+    </noscript>
+    <script src="./prototype-data.js"></script>
+    <script src="./prototype-app.js"></script>
+  </body>
+</html>

@@ -7,14 +7,14 @@
   "temperature": 0.1,
   "defaultOutputTokens": 2500,
   "implementationAuthorized": true,
-  "activePackage": "C1",
+  "activePackage": "UXP0",
   "authorityFiles": [
     "control/AUTHORITY.md",
-    "control/C1_BOUNDARY.md",
+    "control/UXP0_BOUNDARY.md",
     "control/STOREFRONT_ARCHITECTURE.md",
     "control/SHOPIFY_SOURCE_REGISTER.md",
     "control/COMMUNICATION_PROTOCOL.md",
-    "control/C1_AUTHORIZATION.md",
+    "control/UXP0_AUTHORIZATION.md",
     "control/BRAND_SYSTEM.md"
   ],
   "models": {

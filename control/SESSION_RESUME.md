@@ -1,6 +1,6 @@
 # KartVantage session resume state
 
-Last updated: 2026-09-12
+Last updated: 2026-09-13
 
 ## Durable control room
 
@@ -11,9 +11,10 @@ Last updated: 2026-09-12
 
 ## Active package
 
-- Package: C1 — scaffold and engineering baseline.
-- State: locally validated, not complete.
-- Authorization: C1 only. C2+, production deployment, billing, and destructive Shopify changes are not authorized.
+- Package: UXP0 — complete-product interactive prototype.
+- State: locally built and verified 2026-09-13; awaiting GitHub Pages publication, CMO Umesh approval, and owner acceptance.
+- Authorization: simulation-only experience across merchant, shopper-preview, and internal operations surfaces. No live Shopify business writes, billing, theme mutation, or release.
+- Hosting: a brand-new Render web service with PostgreSQL is approved after CMO Umesh approval and owner acceptance of the prototype.
 
 ## Verified checkpoint
 
@@ -25,8 +26,8 @@ Last updated: 2026-09-12
 
 ## Current boundary requiring the owner
 
-The owner chose the existing non-live KartVantage app identity. The greenfield repository is linked to that app, configuration validation passes, and the authenticated development preview renders correctly in `kartvantage.myshopify.com`. A permanent greenfield hosting destination must be selected before the released app version can replace the legacy Render-hosted build.
+Owner confirmation is required immediately before Codex creates the public GitHub repository and enables GitHub Pages. After publication, CMO Umesh and the owner must review the prototype before Render or production work begins.
 
 ## Next safe action
 
-Choose and configure permanent greenfield hosting, repeat the relevant production-like checks, replace the Dev Dashboard URLs, and then request C1 owner acceptance. Do not release an app version or start C2 without the applicable authorization.
+Create the public GitHub repository after immediate confirmation, push the verified commit, enable and verify GitHub Pages, update the progress dashboard with live/proof links, and provide the CMO review brief. Do not create the Render service or resume frozen production packages before Umesh approves and the owner accepts the prototype.

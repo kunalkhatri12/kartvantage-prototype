@@ -43,6 +43,10 @@ C1 scaffold → C2 merchant auth/Store lifecycle → C3 staff authorization → 
 
 Each package stops for Codex audit and owner approval.
 
+## Authorized prototype overlay
+
+On 2026-09-13 the owner authorized `UXP0`, a simulation-only complete-product prototype, before production package implementation continues. `UXP0` does not renumber or bypass the frozen C-package order. Its exact boundary is `control/UXP0_BOUNDARY.md`.
+
 ## Package-label reconciliation
 
 The owner described the future theme implementation as a later `C10` package. The frozen 2026-09-10 build register assigns C10 to Master Admin/support and begins theme work at C11. The architecture in `STOREFRONT_ARCHITECTURE.md` is binding; its final package number remains an explicit roadmap decision and must not be silently renumbered by an agent.

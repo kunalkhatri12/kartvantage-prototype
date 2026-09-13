@@ -1,12 +1,25 @@
 # Agent status
 
-- Active control package: C1
-- Application code: branded C1 public landing and embedded Admin shell only; no business behavior
-- Implementation authorization: C1 only, recorded 2026-09-12
-- Local planning tasks: 2 completed and audited
-- Local-agent output: 1,909 tokens total; transcripts/provenance retained under ignored `.agent/runs/`
-- C1: linked, locally validated, and authenticated in the installed test store; permanent hosting and owner acceptance remain open
-- External actions: temporary Shopify development preview activated; no app version released and no production resource changed
+- Active control package: UXP0 — complete-product interactive prototype
+- Application code: branded C1 shell plus a complete static UXP0 product prototype; no production business behavior
+- Implementation authorization: simulation-only UXP0, recorded 2026-09-13
+- Local planning/audit tasks: 4 completed; 2 accepted after reconciliation and 2 rejected for invented/contradictory file claims
+- Local-agent transcripts/provenance are retained under ignored `.agent/runs/`
+- UXP0 local build and QA passed; GitHub Pages publication and CMO Umesh approval remain open.
+- C1 foundation remains verified; production package progression is paused at the prototype approval gate.
+- New Render web service with PostgreSQL is owner-approved, but creation follows prototype acceptance.
+- External boundary: no Shopify business writes, release, billing, or theme mutation during UXP0.
+
+## UXP0 evidence checkpoint — 2026-09-13
+
+- Full merchant, shopper-preview, support, and operations prototype implemented in `docs/` with eight deterministic scenarios.
+- Owner-supplied KartVantage logo and brand system applied.
+- Interactive QA found and corrected one Merchant 360 target defect.
+- Eight prototype contract tests and twelve total repository tests passed.
+- Lint, typecheck, production build, and diff integrity passed.
+- Desktop and emulated mobile browser proof passed in four contexts with zero console problems and no external resources.
+- Evidence: `proof/UXP0/VALIDATION.md`.
+- Do not mark UXP0 complete until GitHub Pages is live and CMO/owner approval is recorded.
 
 ## C1 evidence checkpoint — 2026-09-12
 

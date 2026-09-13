@@ -3,7 +3,7 @@
 - Active control package: UXP0 — complete-product interactive prototype
 - Application code: branded C1 shell plus a complete static UXP0 product prototype; no production business behavior
 - Implementation authorization: simulation-only UXP0, recorded 2026-09-13
-- Local planning/audit tasks: 4 completed; 2 accepted after reconciliation and 2 rejected for invented/contradictory file claims
+- Local planning/audit tasks: 5 completed; 3 accepted after reconciliation and 2 rejected for invented/contradictory file claims
 - Local-agent transcripts/provenance are retained under ignored `.agent/runs/`
 - UXP0 local build and QA passed; GitHub Pages publication and CMO Umesh approval remain open.
 - C1 foundation remains verified; production package progression is paused at the prototype approval gate.
@@ -19,6 +19,7 @@
 - Lint, typecheck, production build, and diff integrity passed.
 - Desktop and emulated mobile browser proof passed in four contexts with zero console problems and no external resources.
 - Evidence: `proof/UXP0/VALIDATION.md`.
+- Owner-requested compact Shopify Admin visual revision completed and reverified; local `shopify-deep:latest` guidance was accepted after Codex review.
 - Do not mark UXP0 complete until GitHub Pages is live and CMO/owner approval is recorded.
 
 ## C1 evidence checkpoint — 2026-09-12

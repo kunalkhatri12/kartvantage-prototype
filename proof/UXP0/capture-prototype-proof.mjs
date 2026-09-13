@@ -69,7 +69,7 @@ try {
   await send("Log.enable");
 
   const cases = [
-    { name: "merchant-overview-desktop", width: 1440, height: 1100, path: "?role=merchant&scenario=healthy#/app/overview", heading: "Clear carts. Confident checkouts." },
+    { name: "merchant-overview-desktop", width: 1440, height: 1100, path: "?role=merchant&scenario=healthy#/app/overview", heading: "Overview" },
     { name: "merchant-rules-mobile", width: 390, height: 844, path: "?role=merchant&scenario=conflict#/app/rules", heading: "Rules" },
     { name: "storefront-fallback-desktop", width: 1440, height: 1100, path: "?role=merchant&scenario=theme-fallback#/app/storefront", heading: "Storefront guidance" },
     { name: "operations-incident-desktop", width: 1440, height: 1100, path: "?role=operations&scenario=incident#/app/ops/overview", heading: "Operations overview" },

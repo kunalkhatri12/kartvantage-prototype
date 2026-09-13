@@ -6,6 +6,12 @@ Validated: 2026-09-13
 
 The complete-product prototype is verified locally and ready for owner/CMO review. It is a static, fictional, session-local demonstration: it does not call Shopify business APIs, mutate a theme, create billing charges, or change customer/store data.
 
+## Compact Shopify Admin visual revision
+
+After owner review of the initial desktop prototype, the visual system was rebuilt around a lighter Shopify Admin-style hierarchy: 14px body type, 24px page titles, a 208px light navigation rail, 36px controls, a 1200px content measure, restrained brand accents, grouped metrics, compact setup tasks, subtle borders, and minimal shadows. The redundant heavy navigation treatment, oversized metric cards, excessive bold type, and dark secondary actions were removed. Role and scenario controls remain available on mobile.
+
+`shopify-deep:latest` reviewed the proposed visual direction locally. Codex accepted its token and accessibility recommendations as design guidance, implemented the revision, and independently reran all evidence checks.
+
 ## Automated evidence
 
 - `npm run prototype:check`: 8/8 prototype contract tests passed.
@@ -25,6 +31,8 @@ The scripted browser check used a no-cache static server and passed four desktop
 - `storefront-fallback-desktop.png`: theme-aware fallback and shopper guidance, 1440×1100.
 - `operations-incident-desktop.png`: internal Operations incident view, 1440×1100.
 - `browser-validation.json`: machine-readable assertions for all four captures.
+
+The browser captures listed above were regenerated after the compact visual revision and are the current evidence set.
 
 Interactive browser checks also passed:
 

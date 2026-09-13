@@ -25,7 +25,7 @@ test("prototype data exposes the required reproducible scenarios", () => {
 
 test("prototype app contains every major merchant and operations route", () => {
   const required = [
-    "overview", "rules", "rule-new", "test-lab", "conflicts", "publish",
+    "overview", "rules", "rule-new", "rule-test", "rule-review", "test-lab", "conflicts", "publish",
     "storefront", "shopper-preview", "health", "activity", "help", "plans",
     "settings", "privacy", "ops-overview", "ops-merchants", "merchant-360",
     "ops-support", "ops-publishing", "ops-jobs", "ops-incidents", "ops-releases",
@@ -80,4 +80,19 @@ test("role navigation stays minimal while approved secondary pages remain reacha
   const operationsMenu = appSource.slice(appSource.indexOf("const opsNav"), appSource.indexOf("const scenarios"));
   assert.doesNotMatch(operationsMenu, /"Billing"/);
   assert.match(appSource, /button\("Billing inspection", "ops-billing"/);
+});
+
+test("rule journey preserves the selected draft from configuration through publication", () => {
+  assert.match(appSource, /app\/rules\/\$\{id\}\/test/);
+  assert.match(appSource, /app\/rules\/\$\{id\}\/review/);
+  assert.match(appSource, /Save draft and continue/);
+  assert.match(appSource, /Run three-case test/);
+  assert.match(appSource, /Below, exact, and above-boundary cases/);
+  assert.match(appSource, /testEvidence\?\.passed/);
+  assert.match(appSource, /min=\"\$\{moneyRule\?\"0\.01\":\"1\"\}\"/);
+  assert.match(appSource, /Select at least one product or collection/);
+  assert.match(appSource, /minimumFractionDigits: 2, maximumFractionDigits: 2/);
+  assert.match(appSource, /selectedScope=productRule\|\|chosen\.length/);
+  assert.match(appSource, /Changes explanation order, never enforcement truth/);
+  assert.match(appSource, /Final confirmation after configuration, saved-draft tests, and review/);
 });

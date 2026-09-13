@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-09-13T16:43:00.540Z",
+  "checkedAt": "2026-09-13T17:25:16.757Z",
   "base": "http://127.0.0.1:4174/",
   "cases": [
     {
@@ -43,6 +43,23 @@
       "heading": "Rules",
       "screenshot": true,
       "title": "Rules · KartVantage Prototype",
+      "prototype": true,
+      "external": [],
+      "horizontalOverflow": false,
+      "logoLoaded": true,
+      "mainWithinViewport": true,
+      "headingVisible": true,
+      "undersizedControls": [],
+      "status": "PASS"
+    },
+    {
+      "name": "rule-configure-mobile",
+      "width": 390,
+      "height": 844,
+      "path": "?role=merchant&scenario=healthy#/app/rules/new/configure?type=minimum-product-quantity",
+      "heading": "Configure rule",
+      "screenshot": true,
+      "title": "Configure rule · KartVantage Prototype",
       "prototype": true,
       "external": [],
       "horizontalOverflow": false,
@@ -135,6 +152,40 @@
       "status": "PASS"
     },
     {
+      "name": "rule-test-desktop",
+      "width": 1280,
+      "height": 900,
+      "path": "?role=merchant&scenario=healthy#/app/rules/r02/test",
+      "heading": "Test saved draft",
+      "screenshot": true,
+      "title": "Test rule · KartVantage Prototype",
+      "prototype": true,
+      "external": [],
+      "horizontalOverflow": false,
+      "logoLoaded": true,
+      "mainWithinViewport": true,
+      "headingVisible": true,
+      "undersizedControls": [],
+      "status": "PASS"
+    },
+    {
+      "name": "rule-review-desktop",
+      "width": 1280,
+      "height": 900,
+      "path": "?role=merchant&scenario=healthy#/app/rules/r02/review",
+      "heading": "Review rule",
+      "screenshot": true,
+      "title": "Review rule · KartVantage Prototype",
+      "prototype": true,
+      "external": [],
+      "horizontalOverflow": false,
+      "logoLoaded": true,
+      "mainWithinViewport": true,
+      "headingVisible": true,
+      "undersizedControls": [],
+      "status": "PASS"
+    },
+    {
       "name": "merchant-overview-desktop",
       "width": 1440,
       "height": 1100,
@@ -217,6 +268,21 @@
       "mainWithinViewport": true,
       "headingVisible": true,
       "undersizedControls": [],
+      "status": "PASS"
+    },
+    {
+      "name": "rule-journey-interaction",
+      "status": "PASS",
+      "stages": [
+        "configure",
+        "saved-draft-test",
+        "review",
+        "publish"
+      ],
+      "evidenceCases": 3
+    },
+    {
+      "name": "product-resource-required",
       "status": "PASS"
     }
   ],

@@ -42,8 +42,9 @@
       "minimum-product-quantity": "minProduct", "product-purchase-limit": "maxProduct",
       "minimum-items": "minItems", "maximum-items": "maxItems", "customer-specific": "customer"
     };
-    const normalized = Object.assign({ id: `rule-${i || 0}`, name: "Untitled rule", type: "minAmount", value: 0, status: "draft", scope: "All carts", priority: 0, message: "Update your cart to continue." }, r);
+    const normalized = Object.assign({ id: `rule-${i || 0}`, name: "Untitled rule", type: "minAmount", value: 0, status: "draft", scope: "All eligible products", priority: 0, message: "Update your cart to continue.", selectedResources: [], excludedTags: [], testEvidence: null }, r);
     normalized.type = typeMap[normalized.type] || normalized.type;
+    if (["All products", "All carts"].includes(normalized.scope)) normalized.scope = "All eligible products";
     return normalized;
   }
   function restore() {
@@ -55,6 +56,7 @@
   function persist() { sessionStorage.setItem("kv-prototype-state", JSON.stringify(state)); }
   function esc(value) { return String(value == null ? "" : value).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
   function money(value) { return new Intl.NumberFormat(DATA.meta?.locale || undefined, { style: "currency", currency: DATA.meta?.currency || "USD", maximumFractionDigits: 0 }).format(Number(value) || 0); }
+  function moneyPrecise(value) { return new Intl.NumberFormat(DATA.meta?.locale || undefined, { style: "currency", currency: DATA.meta?.currency || "USD", minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(Number(value) || 0); }
   function route() {
     const raw = location.hash.replace(/^#\/?/, "") || "app/overview";
     const parts = raw.split("?")[0].split("/").filter(Boolean);
@@ -69,6 +71,8 @@
     if(section==="onboarding") return {ops:false,page:"onboarding"};
     if(section==="rules"&&parts[2]==="new") return {ops:false,page:"rule-new",id:parts[3]};
     if(section==="rules"&&parts[3]==="conflict") return {ops:false,page:"conflicts",id:parts[2]};
+    if(section==="rules"&&parts[3]==="test") return {ops:false,page:"rule-test",id:parts[2]};
+    if(section==="rules"&&parts[3]==="review") return {ops:false,page:"rule-review",id:parts[2]};
     if(section==="rules"&&parts[3]==="publish") return {ops:false,page:"publish",id:parts[2]};
     if(section==="rules"&&parts[2]) return {ops:false,page:"rule-detail",id:parts[2]};
     if(section==="storefront"&&parts[2]==="preview") return {ops:false,page:"shopper-preview"};
@@ -122,7 +126,7 @@
     document.title = `${pageTitle(r)} · KartVantage Prototype`;
     persistUrl();
   }
-  function pageTitle(r) { if (r.page === "rule-new" && r.id === "configure") return "Configure rule"; return (r.ops ? opsNav : merchantNav).find(x => x[0] === r.page)?.[1] || ({onboarding:"Get started","rule-new":"Choose a rule","rule-detail":"Rule details",conflicts:"Resolve conflict",publish:"Publish","shopper-preview":"Shopper preview",privacy:"Privacy and data",activity:"Activity",plans:"Plans",settings:"Settings","ops-billing":"Billing","merchant-360":"Merchant 360","support-case":"Support case"})[r.page] || "KartVantage"; }
+  function pageTitle(r) { if (r.page === "rule-new" && r.id === "configure") return "Configure rule"; return (r.ops ? opsNav : merchantNav).find(x => x[0] === r.page)?.[1] || ({onboarding:"Get started","rule-new":"Choose a rule","rule-detail":"Rule details","rule-test":"Test rule","rule-review":"Review rule",conflicts:"Resolve conflict",publish:"Publish","shopper-preview":"Shopper preview",privacy:"Privacy and data",activity:"Activity",plans:"Plans",settings:"Settings","ops-billing":"Billing","merchant-360":"Merchant 360","support-case":"Support case"})[r.page] || "KartVantage"; }
   function persistUrl() {
     const u = new URL(location.href); u.searchParams.set("role", parameterId(state.role)); u.searchParams.set("scenario", parameterId(state.scenario));
     history.replaceState(null, "", `${u.pathname}${u.search}${location.hash}`);
@@ -146,8 +150,10 @@
   function renderMerchant(r) {
     if (r.page === "rule-detail") return ruleBuilder(r.id);
     if (r.page === "rule-new") return r.id === "configure" ? ruleBuilder(null, new URLSearchParams(location.hash.split("?")[1]||"").get("type")) : ruleGallery();
+    if (r.page === "rule-test") return ruleTest(r.id);
+    if (r.page === "rule-review") return ruleReview(r.id);
     if (r.page === "conflicts") return conflictsView(r.id);
-    if (r.page === "publish") { const rule=state.rules.find(x=>x.id===r.id)||state.rules[0]; return `${header("Publish rule", "Review the safe state transition before running a demonstration.",button("Back to rules","go-rules","secondary"))}<section class="kv-card">${publishPanel(rule)}<div class="kv-actions">${button("Run publish simulation",`publish:${rule.id}`,"primary")}</div></section>`; }
+    if (r.page === "publish") { const rule=state.rules.find(x=>x.id===r.id)||state.rules[0]; return `${header("Publish rule", "Final confirmation after configuration, saved-draft tests, and review.",button("Back to review",`review-rule:${rule.id}`,"secondary"))}${rule.testEvidence?.passed?"":notice("Testing required", "Run the three-case rule test before publication can be simulated.", "warning")}<section class="kv-card">${publishPanel(rule)}<div class="kv-actions">${button("Run publish simulation",`publish:${rule.id}`,"primary",rule.testEvidence?.passed?"":"disabled")}</div></section>`; }
     const views = { overview, onboarding, rules: rulesView, "test-lab": testLab, storefront, "shopper-preview": shopperPreviewView, health, "activity": activityView, help, "plans": plans, "settings": settings, privacy };
     return (views[r.page] || overview)();
   }
@@ -172,28 +178,49 @@
       <section class="kv-card"><div class="kv-filter"><label class="kv-search">Search rules<input type="search" data-control="rule-search" value="${esc(state.search)}" placeholder="Name or rule type"></label><label>Status<select data-control="rule-filter"><option value="all">All</option>${["published", "draft", "paused", "archived"].map(x => `<option${state.ruleFilter === x ? " selected" : ""}>${x}</option>`).join("")}</select></label>${button("Demo loading", "demo-loading", "quiet")}${button("Demo error", "demo-error", "quiet")}</div>
       ${state.uiState==="loading"?`<div class="kv-empty" role="status"><h2>Loading rules…</h2><p>Demonstrated loading state. No network request is made.</p></div>`:state.uiState==="error"?notice("Rules could not be displayed — demonstration","Your last confirmed setup remains unchanged. Reset the view and try again.","warning"):list.length ? `<div class="kv-rule-list">${list.map(ruleCard).join("")}</div>` : empty(state.scenario==="New store"?"Create your first rule":"No matching rules", state.scenario==="New store"?"Choose a Core template, then test it with a fictional cart.":"Try a different search or create a new rule.", state.scenario==="New store"?button("Choose a rule","new-rule","primary"):button("Clear filters", "clear-rule-filters", "secondary"))}</section>`;
   }
-  function ruleCard(r) { const gated=["gated","unavailable"].includes(r.status); return `<article class="kv-rule-card"><div><div class="kv-section-heading"><h2>${esc(r.name)}</h2>${badge(r.status)}</div><p>${esc(ruleType(r.type))} · ${esc(formatRuleValue(r))} · ${esc(r.scope)}</p></div><div class="kv-actions">${gated ? button(r.status === "gated" ? "Controlled preview" : "Not available", "noop", "secondary", "disabled") : `${r.status === "draft" ? button("Publish", `review-publish:${r.id}`, "primary") : button(r.status === "paused" ? "Restore" : "Pause", `toggle-rule:${r.id}`, "secondary")}${button("Edit", `edit-rule:${r.id}`, "dark")}${button("Test", `test-rule:${r.id}`, "secondary")}${button("Archive", `archive-rule:${r.id}`, "danger")}`}</div></article>`; }
+  function ruleCard(r) { const gated=["gated","unavailable"].includes(r.status); return `<article class="kv-rule-card"><div><div class="kv-section-heading"><h2>${esc(r.name)}</h2>${badge(r.status)}</div><p>${esc(ruleType(r.type))} · ${esc(formatRuleValue(r))} · ${esc(r.scope)}</p>${r.testEvidence?.passed?`<small class="kv-evidence-line">✓ Three-case test passed · ${esc(new Date(r.testEvidence.at).toLocaleString())}</small>`:""}</div><div class="kv-actions">${gated ? button(r.status === "gated" ? "Controlled preview" : "Not available", "noop", "secondary", "disabled") : `${r.status === "draft" ? button("Review & publish", `review-rule:${r.id}`, "primary") : button(r.status === "paused" ? "Restore" : "Pause", `toggle-rule:${r.id}`, "secondary")}${button("Edit", `edit-rule:${r.id}`, "dark")}${button("Test", `test-rule:${r.id}`, "secondary")}${button("Archive", `archive-rule:${r.id}`, "danger")}`}</div></article>`; }
   function ruleType(type) { return ({ minAmount: "Minimum order amount", maxAmount: "Maximum order amount", minItems: "Minimum number of items", maxItems: "Maximum number of items", minProduct: "Minimum product quantity", maxProduct: "Product purchase limit", customer: "Customer-specific rule" })[type] || type; }
   function formatRuleValue(r) { return /Amount/.test(r.type) ? money(r.value) : `${r.value} ${Number(r.value) === 1 ? "item" : "items"}`; }
 
   function ruleBuilder(id, templateType) {
     const existing = state.rules.find(x => x.id === id);
     const templateMap={"minimum-order":"minAmount","maximum-order":"maxAmount","minimum-product-quantity":"minProduct","product-purchase-limit":"maxProduct","minimum-items":"minItems","maximum-items":"maxItems"};
-    const r = existing || { id: "", name: "", type: templateMap[templateType]||"minAmount", value: 50, scope: "All carts", message: "Update your cart to continue.", status: "draft" };
+    const r = existing || { id: "", name: "", type: templateMap[templateType]||"minAmount", value: 50, scope: "All eligible products", message: "Update your cart to continue.", status: "draft" };
     const candidateRules=state.rules.map(x=>x.id===existing?.id?Object.assign({},x,{status:"publishing"}):x);
     if(!existing) candidateRules.push(Object.assign({},normalizeRule(r),{status:"publishing"}));
     const conflicts = findConflicts(candidateRules);
-    return `${header(existing ? "Edit rule" : "Create a rule", "Configure, test, and review before anything can be simulated as published.", button("Back to rules", "go-rules", "secondary"))}
-      <div class="kv-stepper" aria-label="Rule builder progress"><span class="is-active">1 Configure</span><span>2 Test</span><span>3 Review</span><span>4 Publish</span></div>
+    const moneyRule=["minAmount","maxAmount"].includes(r.type), productRule=["minProduct","maxProduct"].includes(r.type);
+    const chosen=(r.selectedResources||[]).length?(r.selectedResources||[]):!["All eligible products","All products","All carts"].includes(r.scope)?["Midnight Roast 1 kg"]:[];
+    const selectedScope=productRule||chosen.length;
+    const resources=["Midnight Roast 1 kg","Classic Coffee Bundle","Seasonal Gift Box"];
+    return `${header(existing ? "Edit rule" : "Configure rule", "Set the rule-specific limit and save a draft before testing.", button("Back to rule types", "new-rule", "secondary"))}
+      ${ruleStepper("configure")}
       <form class="kv-card kv-form" data-form="rule" data-rule-id="${esc(r.id)}"><p class="kv-simulation-label">SIMULATED RULE — local prototype state only</p>
-        <label>Rule name<input name="name" required value="${esc(r.name)}" placeholder="For example, Wholesale minimum"></label>
-        <label>Rule type<select name="type">${["minAmount", "maxAmount", "minItems", "maxItems", "minProduct", "maxProduct", "customer"].map(x => `<option value="${x}"${r.type === x ? " selected" : ""}>${esc(ruleType(x))}${x === "customer" ? " — gated preview" : ""}</option>`).join("")}</select></label>
-        <label>Amount or quantity<input name="value" required type="number" min="0" step="1" value="${esc(r.value)}"></label>
-        <label>Applies to<select name="scope"><option${r.scope === "All carts" ? " selected" : ""}>All carts</option><option${r.scope === "Selected products" ? " selected" : ""}>Selected products</option></select></label>
-        <label class="kv-span-2">Shopper message<textarea name="message" rows="3">${esc(r.message)}</textarea><small>Represent your store. KartVantage is not mentioned to shoppers.</small></label>
+        <section class="kv-form-section kv-span-2"><div class="kv-section-heading"><div><p class="kv-eyebrow">Selected rule type</p><h2>${esc(ruleType(r.type))}</h2><p>${esc(ruleHint(r.type))}</p></div>${button("Change", "new-rule", "link")}</div><input name="type" type="hidden" value="${esc(r.type)}"></section>
+        <label>Rule name<input name="name" required maxlength="120" value="${esc(r.name)}" placeholder="For example, Wholesale minimum"></label>
+        <label>${moneyRule?"Amount in store currency":"Quantity in whole units"}<input name="value" required type="number" min="${moneyRule?"0.01":"1"}" step="${moneyRule?"0.01":"1"}" inputmode="${moneyRule?"decimal":"numeric"}" value="${esc(r.value)}"><small>${moneyRule?"Uses the Shopify store currency.":"Enter a positive whole number."}</small></label>
+        <fieldset class="kv-span-2"><legend>Applies to</legend><label class="kv-choice"><input type="radio" name="scope" value="All eligible products"${selectedScope?"":" checked"}${productRule?" disabled":""}> All eligible products</label><label class="kv-choice"><input type="radio" name="scope" value="Selected products and collections"${selectedScope?" checked":""}> Selected products and collections</label></fieldset>
+        <fieldset class="kv-span-2 kv-resource-picker"><legend>${productRule?"Select at least one product or collection":"Optional product and collection scope"}</legend><p>Fictional Shopify picker choices for this prototype.</p>${resources.map(x=>`<label class="kv-choice"><input type="checkbox" name="resources" value="${esc(x)}"${chosen.includes(x)?" checked":""}${productRule?' data-required-resource="true"':""}> ${esc(x)}</label>`).join("")}<small>Product quantity rules apply only when a selected product is present.</small></fieldset>
+        <details class="kv-span-2 kv-advanced"><summary>Optional settings</summary><div class="kv-form kv-form--nested"><label class="kv-span-2">Shopper message<textarea name="message" rows="3" maxlength="280">${esc(r.message)}</textarea><small>Represent your store. KartVantage is not mentioned to shoppers.</small></label><label>Excluded customer tags<input name="excludedTags" value="${esc((r.excludedTags||[]).join(", "))}" placeholder="wholesale, vip"></label><label>Message order<input name="priority" type="number" min="0" step="1" value="${esc(r.priority||0)}"><small>Changes explanation order, never enforcement truth.</small></label></div></details>
         ${conflicts.length ? notice("Potential conflict", conflicts[0].message, "warning") : ""}
-        <div class="kv-actions kv-span-2">${button("Save draft", "submit-rule", "primary", 'type="submit"')}${button("Test this rule", `builder-test:${r.id || "new"}`, "secondary")}</div>
+        <div class="kv-actions kv-span-2">${button(existing?"Save changes and continue":"Save draft and continue", "submit-rule", "primary", 'type="submit"')}${button("Cancel", "go-rules", "secondary")}</div>
       </form>`;
+  }
+
+  function ruleHint(type) { return ({minAmount:"Require the eligible merchandise subtotal to reach a minimum.",maxAmount:"Keep the eligible merchandise subtotal at or below a maximum.",minItems:"Require a minimum total cart quantity.",maxItems:"Limit the total cart quantity.",minProduct:"Require a minimum quantity of each selected product when present.",maxProduct:"Limit the quantity of each selected product."})[type]||"Core checkout rule."; }
+  function ruleStepper(active) { return `<ol class="kv-stepper" aria-label="Rule journey">${[["configure","1 Configure"],["test","2 Test"],["review","3 Review"],["publish","4 Publish"]].map(([id,label])=>`<li class="${id===active?"is-active":""}">${esc(label)}</li>`).join("")}</ol>`; }
+  function singleRuleEvaluation(rule, amount, items) { return evaluate({amount,items},[rule]); }
+  function boundaryCases(rule) { const v=Number(rule.value), money=["minAmount","maxAmount"].includes(rule.type), delta=money?0.01:1; return [{label:"Below",value:Math.max(0,v-delta)},{label:"Exact",value:v},{label:"Above",value:v+delta}].map(c=>{const amount=money?c.value:10000,items=money?5:c.value,result=singleRuleEvaluation(rule,amount,items);return {...c,amount,items,pass:result.pass,errors:result.errors};}); }
+  function expectedBoundary(rule,label) { return rule.type.startsWith("min") ? label!=="Below" : label!=="Above"; }
+  function ruleTest(id) {
+    const rule=state.rules.find(x=>x.id===id); if(!rule)return empty("Rule not found","Return to Rules and choose a saved draft.",button("Back to rules","go-rules","primary"));
+    const cases=boundaryCases(rule), passed=cases.every(c=>c.pass===expectedBoundary(rule,c.label));
+    return `${header("Test saved draft", "Run deterministic below, exact, and above-boundary checks for this rule only.",button("Back to configure",`edit-rule:${rule.id}`,"secondary"))}${ruleStepper("test")}${notice("Testing never publishes", "This evaluates the saved fictional draft without changing Shopify.", "info")}<section class="kv-card"><div class="kv-section-heading"><div><p class="kv-eyebrow">Selected draft</p><h2>${esc(rule.name)}</h2><p>${esc(ruleType(rule.type))} · ${esc(formatRuleValue(rule))} · ${esc(rule.scope)}</p></div>${badge(rule.status)}</div>${table(["Case","Fixture","Expected","Result"],cases.map(c=>`<tr><td>${esc(c.label)}</td><td>${["minAmount","maxAmount"].includes(rule.type)?esc(moneyPrecise(c.amount)):esc(`${c.items} items`)}</td><td>${expectedBoundary(rule,c.label)?"Allowed":"Blocked"}</td><td>${badge(c.pass?"Allowed":"Blocked",c.pass?"success":"warning")}</td></tr>`))}<div class="kv-actions">${button("Run three-case test",`run-rule-suite:${rule.id}`,"primary")}${rule.testEvidence?.passed?button("Continue to review",`review-rule:${rule.id}`,"secondary"):""}</div></section>${rule.testEvidence?.passed?notice("Three-case test passed",`Evidence saved ${new Date(rule.testEvidence.at).toLocaleString()}. Exact boundary is allowed.`,"success"):notice("Run the test suite",passed?"The deterministic outcomes are ready to record.":"The rule configuration needs attention before review.",passed?"info":"warning")}`;
+  }
+  function ruleReview(id) {
+    const rule=state.rules.find(x=>x.id===id); if(!rule)return empty("Rule not found","Return to Rules and choose a saved draft.",button("Back to rules","go-rules","primary"));
+    const candidate=state.rules.map(x=>x.id===id?Object.assign({},x,{status:"publishing"}):x), conflicts=findConflicts(candidate);
+    return `${header("Review rule", "Confirm the saved configuration and test evidence before publication.",button("Back to test",`test-rule:${rule.id}`,"secondary"))}${ruleStepper("review")}<div class="kv-grid kv-grid--2"><section class="kv-card"><p class="kv-eyebrow">Plain-language summary</p><h2>${esc(rule.name)}</h2>${row("Rule type",ruleType(rule.type))}${row("Limit",formatRuleValue(rule))}${row("Scope",rule.scope)}${row("Selected resources",(rule.selectedResources||[]).join(", ")||"All eligible products")}${row("Audience",(rule.excludedTags||[]).length?`All shoppers except ${rule.excludedTags.join(", ")}`:"All shoppers")}${row("Enforcement","Shopify checkout validation")}${row("Shopper message",rule.message||"Safe default message")}</section><section class="kv-card"><p class="kv-eyebrow">Evidence</p><h2>${rule.testEvidence?.passed?"✓ Test suite passed":"Test required"}</h2><p>${rule.testEvidence?.passed?`Below, exact, and above-boundary cases passed on ${new Date(rule.testEvidence.at).toLocaleString()}.`:"Test the saved draft before continuing."}</p>${conflicts.length?notice("Publication blocked",conflicts[0].message,"warning"):notice("No blocking conflicts","The effective minimum and maximum have a valid intersection.","success")}<div class="kv-actions">${rule.testEvidence?.passed&&!conflicts.length?button("Continue to publish",`review-publish:${rule.id}`,"primary"):button("Test saved draft",`test-rule:${rule.id}`,"primary")}${button("Edit configuration",`edit-rule:${rule.id}`,"secondary")}</div></section></div>`;
   }
 
   function evaluate(cart, rules) {
@@ -283,9 +310,11 @@
     if (name === "toggle-menu") { const shell=root.querySelector(".kv-app-shell"), button=target; const open=shell.dataset.menuOpen!=="true"; shell.dataset.menuOpen=String(open); button.setAttribute("aria-expanded",String(open)); return; }
     if (name === "support-case") return go(`app/ops/support/${id}`);
     if (name === "edit-rule") return go(`app/rules/${id}`);
+    if (name === "test-rule") return go(`app/rules/${id}/test`);
+    if (name === "review-rule") return go(`app/rules/${id}/review`);
     if (name === "review-publish") return go(`app/rules/${id}/publish`);
     if (name === "configure-template") return go(`app/rules/new/configure?type=${encodeURIComponent(id)}`);
-    if (name === "test-rule" || name === "builder-test") return go("app/test-lab");
+    if (name === "run-rule-suite") { const rule=state.rules.find(x=>x.id===id); if(!rule)return; const cases=boundaryCases(rule), passed=cases.every(c=>c.pass===expectedBoundary(rule,c.label)); rule.testEvidence={at:new Date().toISOString(),passed,cases:cases.map(c=>({label:c.label,allowed:c.pass}))}; activity(`${rule.name} three-case test ${passed?"passed":"failed"} — simulated`,passed?"Passed":"Needs attention"); persist(); render(); toast(passed?"Three-case test evidence saved.":"The rule needs attention before review.",passed?"success":"error"); return; }
     if (name === "close-modal") return closeModal();
     if (name === "clear-rule-filters") { state.search=""; state.ruleFilter="all"; render(); return; }
     if (name === "reset-demo") return modal("Reset prototype?", "<p>This clears only fictional, session-local changes. Shopify and customer data are never touched.</p>", "confirm-reset", "Reset demo");
@@ -332,7 +361,15 @@
   root.addEventListener("submit", e => {
     e.preventDefault(); const form=e.target;
     if(form.dataset.form==="test"){ const fd=new FormData(form); state.testAmount=Number(fd.get("amount"));state.testItems=Number(fd.get("items"));activity("Cart fixture tested — simulated","Tested");render();return; }
-    if(form.dataset.form==="rule"){ const fd=new FormData(form), id=form.dataset.ruleId||`rule-${Date.now()}`; let r=state.rules.find(x=>x.id===id); if(!r){r={id,status:"draft",priority:state.rules.length*10};state.rules.push(r);} Object.assign(r,{name:String(fd.get("name")).trim()||"Untitled rule",type:fd.get("type"),value:Number(fd.get("value")),scope:fd.get("scope"),message:fd.get("message")});activity(`${r.name} saved as draft — simulated`,"Saved");persist();go("app/rules");toast("Draft saved in this browser session."); }
+    if(form.dataset.form==="rule"){
+      const fd=new FormData(form), id=form.dataset.ruleId||`rule-${Date.now()}`, type=String(fd.get("type")), resources=fd.getAll("resources").map(String), value=Number(fd.get("value"));
+      if(!String(fd.get("name")||"").trim()){toast("Enter a rule name.","error");return;}
+      if(!Number.isFinite(value)||value<=0||(!["minAmount","maxAmount"].includes(type)&&!Number.isInteger(value))){toast("Enter a valid positive limit.","error");return;}
+      if(["minProduct","maxProduct"].includes(type)&&!resources.length){toast("Select at least one product or collection.","error");return;}
+      let r=state.rules.find(x=>x.id===id); if(!r){r={id,status:"draft",priority:state.rules.length*10};state.rules.push(r);}
+      Object.assign(r,{name:String(fd.get("name")).trim(),type,value,scope:resources.length?"Selected products and collections":"All eligible products",selectedResources:resources,excludedTags:String(fd.get("excludedTags")||"").split(",").map(x=>x.trim()).filter(Boolean),priority:Number(fd.get("priority")||0),message:String(fd.get("message")||"").trim()||"Update your cart to continue.",testEvidence:null});
+      activity(`${r.name} saved as draft — simulated`,"Saved");persist();go(`app/rules/${id}/test`);toast("Draft saved. Test this exact rule before review.");
+    }
   });
   window.addEventListener("hashchange", render);
   const params=new URLSearchParams(location.search); state.role=fromParameter(params.get("role"),roles)||state.role; state.scenario=fromParameter(params.get("scenario"),scenarios)||state.scenario;

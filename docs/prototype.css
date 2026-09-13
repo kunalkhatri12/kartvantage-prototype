@@ -539,11 +539,25 @@
 .kv-prototype .kv-step.is-complete .kv-step__number,
 .kv-prototype .rule-builder-stepper li.is-complete .step-number { border-color: var(--kv-lime); background: var(--kv-lime); color: var(--kv-navy); }
 .kv-prototype .kv-step.is-complete:not(:last-child)::after { background: var(--kv-lime); }
-.kv-prototype .kv-stepper > span { position: relative; min-width: 0; padding: 10px 8px 10px 39px; border-bottom: 2px solid var(--kv-border); color: var(--kv-muted); font-size: .78rem; font-weight: 750; }
-.kv-prototype .kv-stepper > span::before { position: absolute; top: 7px; left: 4px; display: grid; width: 28px; height: 28px; place-items: center; border: 1px solid var(--kv-border-strong); border-radius: 50%; background: #fff; content: counter(kv-step); counter-increment: kv-step; }
+.kv-prototype .kv-stepper { margin: 0; padding: 0; list-style: none; }
+.kv-prototype .kv-stepper > :where(span, li) { position: relative; min-width: 0; padding: 10px 8px 10px 39px; border-bottom: 2px solid var(--kv-border); color: var(--kv-muted); font-size: .78rem; font-weight: 750; }
+.kv-prototype .kv-stepper > :where(span, li)::before { position: absolute; top: 7px; left: 4px; display: grid; width: 28px; height: 28px; place-items: center; border: 1px solid var(--kv-border-strong); border-radius: 50%; background: #fff; content: counter(kv-step); counter-increment: kv-step; }
 .kv-prototype .kv-stepper { counter-reset: kv-step; }
-.kv-prototype .kv-stepper > span.is-active { border-bottom-color: var(--kv-lime); color: var(--kv-navy); }
-.kv-prototype .kv-stepper > span.is-active::before { border-color: var(--kv-navy); background: var(--kv-navy); color: #fff; }
+.kv-prototype .kv-stepper > :where(span, li).is-active { border-bottom-color: var(--kv-lime); color: var(--kv-navy); }
+.kv-prototype .kv-stepper > :where(span, li).is-active::before { border-color: var(--kv-navy); background: var(--kv-navy); color: #fff; }
+
+.kv-prototype .kv-form-section { padding-bottom: 14px; border-bottom: 1px solid var(--kv-border); }
+.kv-prototype .kv-form fieldset { min-width: 0; margin: 0; padding: 14px; border: 1px solid var(--kv-border); border-radius: 8px; }
+.kv-prototype .kv-form legend { padding: 0 5px; color: var(--kv-navy); font-size: .84rem; font-weight: 700; }
+.kv-prototype .kv-choice { display: flex; align-items: center; gap: 8px; min-height: 34px; color: var(--kv-ink); font-size: .84rem; font-weight: 450; }
+.kv-prototype .kv-choice input { width: 16px; height: 16px; margin: 0; accent-color: var(--kv-lime-hover); }
+.kv-prototype .kv-resource-picker { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px 14px; }
+.kv-prototype .kv-resource-picker :where(legend, p, small) { grid-column: 1 / -1; }
+.kv-prototype .kv-resource-picker :where(p, small), .kv-prototype .kv-advanced small { margin: 0; color: var(--kv-muted); font-size: .76rem; }
+.kv-prototype .kv-advanced { padding: 0 !important; overflow: hidden; }
+.kv-prototype .kv-advanced summary { cursor: pointer; padding: 12px 14px; color: var(--kv-navy); font-size: .84rem; font-weight: 700; }
+.kv-prototype .kv-form--nested { padding: 14px; border-top: 1px solid var(--kv-border); }
+.kv-prototype .kv-evidence-line { display: block; margin-top: 5px; color: var(--kv-success); font-size: .74rem; }
 .kv-prototype .kv-grid > .kv-step { display: grid; min-width: 0; justify-items: start; gap: 9px; padding: 17px; border: 1px solid var(--kv-border); border-radius: 14px; background: var(--kv-mint-2); color: var(--kv-ink); text-align: left; }
 .kv-prototype .kv-grid > .kv-step > span:first-child { display: grid; width: 34px; height: 34px; place-items: center; border-radius: 10px; background: var(--kv-lime); color: var(--kv-navy); font-weight: 850; }
 .kv-prototype .kv-grid > .kv-step :where(h3, p) { margin: 0; }
@@ -821,8 +835,9 @@
   .kv-prototype .kv-rule-card__meta { grid-template-columns: minmax(0, 1fr); }
   .kv-prototype .kv-stepper,
   .kv-prototype .rule-builder-stepper { grid-template-columns: minmax(0, 1fr); gap: 8px; }
-  .kv-prototype .kv-stepper > span { border: 0; border-left: 2px solid var(--kv-border); padding: 9px 8px 9px 42px; }
-  .kv-prototype .kv-stepper > span.is-active { border-left-color: var(--kv-lime); }
+  .kv-prototype .kv-stepper > :where(span, li) { border: 0; border-left: 2px solid var(--kv-border); padding: 9px 8px 9px 42px; }
+  .kv-prototype .kv-stepper > :where(span, li).is-active { border-left-color: var(--kv-lime); }
+  .kv-prototype .kv-resource-picker { grid-template-columns: minmax(0, 1fr); }
   .kv-prototype .kv-step,
   .kv-prototype .rule-builder-stepper li { grid-template-columns: 36px minmax(0, 1fr); justify-items: start; align-items: center; text-align: left; }
   .kv-prototype .kv-step:not(:last-child)::after,

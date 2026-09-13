@@ -69,21 +69,32 @@ try {
   await send("Log.enable");
 
   const cases = [
-    { name: "merchant-overview-desktop", width: 1440, height: 1100, path: "?role=merchant&scenario=healthy#/app/overview", heading: "Overview" },
-    { name: "merchant-rules-mobile", width: 390, height: 844, path: "?role=merchant&scenario=conflict#/app/rules", heading: "Rules" },
-    { name: "storefront-fallback-desktop", width: 1440, height: 1100, path: "?role=merchant&scenario=theme-fallback#/app/storefront", heading: "Storefront guidance" },
-    { name: "operations-incident-desktop", width: 1440, height: 1100, path: "?role=operations&scenario=incident#/app/ops/overview", heading: "Operations overview" },
+    { name: "merchant-overview-phone-small", width: 320, height: 568, path: "?role=merchant&scenario=healthy#/app/overview", heading: "Overview", screenshot: true },
+    { name: "merchant-rules-phone", width: 360, height: 800, path: "?role=merchant&scenario=conflict#/app/rules", heading: "Rules" },
+    { name: "merchant-rules-mobile", width: 390, height: 844, path: "?role=merchant&scenario=conflict#/app/rules", heading: "Rules", screenshot: true },
+    { name: "storefront-phone-large", width: 430, height: 932, path: "?role=merchant&scenario=theme-fallback#/app/storefront", heading: "Storefront guidance" },
+    { name: "merchant-overview-tablet-portrait", width: 768, height: 1024, path: "?role=merchant&scenario=healthy#/app/overview", heading: "Overview", screenshot: true },
+    { name: "storefront-tablet-modern", width: 820, height: 1180, path: "?role=merchant&scenario=theme-fallback#/app/storefront", heading: "Storefront guidance" },
+    { name: "operations-tablet-landscape", width: 1024, height: 768, path: "?role=operations&scenario=incident#/app/ops/overview", heading: "Operations overview", screenshot: true },
+    { name: "merchant-rules-laptop", width: 1280, height: 800, path: "?role=merchant&scenario=conflict#/app/rules", heading: "Rules" },
+    { name: "merchant-overview-desktop", width: 1440, height: 1100, path: "?role=merchant&scenario=healthy#/app/overview", heading: "Overview", screenshot: true },
+    { name: "storefront-fallback-desktop", width: 1440, height: 1100, path: "?role=merchant&scenario=theme-fallback#/app/storefront", heading: "Storefront guidance", screenshot: true },
+    { name: "merchant-overview-wide", width: 1920, height: 1080, path: "?role=merchant&scenario=healthy#/app/overview", heading: "Overview", screenshot: true },
+    { name: "operations-incident-desktop", width: 1440, height: 1100, path: "?role=operations&scenario=incident#/app/ops/overview", heading: "Operations overview", screenshot: true },
+    { name: "operations-ultrawide", width: 2560, height: 1440, path: "?role=operations&scenario=incident#/app/ops/overview", heading: "Operations overview", screenshot: true },
   ];
   const results = [];
   for (const item of cases) {
     await send("Emulation.setDeviceMetricsOverride", { width: item.width, height: item.height, deviceScaleFactor: 1, mobile: item.width < 600, screenWidth: item.width, screenHeight: item.height });
     await send("Page.navigate", { url: `${base}${item.path}` });
     await wait(900);
-    const evaluation = await send("Runtime.evaluate", { expression: `JSON.stringify({title:document.title,heading:document.querySelector('h1')?.textContent,prototype:document.body.innerText.includes('Prototype mode')&&document.body.innerText.includes('No Shopify or customer data is changed'),external:[...performance.getEntriesByType('resource')].map(x=>x.name).filter(x=>!x.startsWith(location.origin)),horizontalOverflow:document.documentElement.scrollWidth>document.documentElement.clientWidth+1,logoLoaded:Boolean(document.querySelector('.kv-brand__logo')?.complete&&document.querySelector('.kv-brand__logo')?.naturalWidth)})`, returnByValue: true });
+    const evaluation = await send("Runtime.evaluate", { expression: `JSON.stringify((()=>{const visible=e=>{const s=getComputedStyle(e),r=e.getBoundingClientRect();return s.display!=='none'&&s.visibility!=='hidden'&&r.width>0&&r.height>0};const controls=[...document.querySelectorAll('button,input,select,textarea')].filter(visible);const main=document.querySelector('#kv-main'),heading=document.querySelector('h1');return {title:document.title,heading:heading?.textContent,prototype:document.body.innerText.includes('Prototype mode')&&document.body.innerText.includes('No Shopify or customer data is changed'),external:[...performance.getEntriesByType('resource')].map(x=>x.name).filter(x=>!x.startsWith(location.origin)),horizontalOverflow:document.documentElement.scrollWidth>document.documentElement.clientWidth+1,logoLoaded:Boolean(document.querySelector('.kv-brand__logo')?.complete&&document.querySelector('.kv-brand__logo')?.naturalWidth),mainWithinViewport:Boolean(main&&main.getBoundingClientRect().right<=innerWidth+1),headingVisible:Boolean(heading&&visible(heading)),undersizedControls:controls.filter(e=>e.getBoundingClientRect().height<32).map(e=>e.textContent||e.getAttribute('aria-label')||e.tagName).slice(0,5)}})())`, returnByValue: true });
     const facts = JSON.parse(evaluation.result.value);
-    if (facts.heading !== item.heading || !facts.prototype || facts.external.length || facts.horizontalOverflow || !facts.logoLoaded) throw new Error(`${item.name} failed: ${JSON.stringify(facts)}`);
-    const screenshot = await send("Page.captureScreenshot", { format: "png", fromSurface: true, captureBeyondViewport: true });
-    await writeFile(new URL(`./${item.name}.png`, import.meta.url), Buffer.from(screenshot.data, "base64"));
+    if (facts.heading !== item.heading || !facts.prototype || facts.external.length || facts.horizontalOverflow || !facts.logoLoaded || !facts.mainWithinViewport || !facts.headingVisible || facts.undersizedControls.length) throw new Error(`${item.name} failed: ${JSON.stringify(facts)}`);
+    if (item.screenshot) {
+      const screenshot = await send("Page.captureScreenshot", { format: "png", fromSurface: true, captureBeyondViewport: true });
+      await writeFile(new URL(`./${item.name}.png`, import.meta.url), Buffer.from(screenshot.data, "base64"));
+    }
     results.push({ ...item, ...facts, status: "PASS" });
   }
   if (consoleProblems.length) throw new Error(`Console problems: ${consoleProblems.join(" | ")}`);

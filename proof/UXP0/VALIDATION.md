@@ -12,10 +12,12 @@ After owner review of the initial desktop prototype, the visual system was rebui
 
 `shopify-deep:latest` reviewed the proposed visual direction locally. Codex accepted its token and accessibility recommendations as design guidance, implemented the revision, and independently reran all evidence checks.
 
+The role navigation was then audited with `qwen3-coder:30b`. Merchant navigation was reduced to six primary destinations: Overview, Rules, Test Lab, Storefront, Health, and Help. Activity, Plan, Settings, and Privacy remain available as contextual sub-pages from Health/Help/Settings. Internal Billing inspection moved under Privacy; the specialized Operations responsibilities remain visible because each is an independently required control-room surface. Automated coverage prevents the removed secondary destinations from returning to the primary merchant menu or becoming unreachable.
+
 ## Automated evidence
 
 - `npm run prototype:check`: 8/8 prototype contract tests passed.
-- `npm test`: 12/12 repository tests passed.
+- `npm test`: 13/13 repository tests passed.
 - `npm run lint`: passed.
 - `npm run typecheck`: passed.
 - `npm run build`: passed.
@@ -24,7 +26,7 @@ After owner review of the initial desktop prototype, the visual system was rebui
 
 ## Browser evidence
 
-The scripted browser check used a no-cache static server and passed four desktop/mobile contexts with zero console warnings or errors, no external resources, no horizontal overflow, the real KartVantage brand asset loaded, the expected page heading present, and the persistent prototype boundary visible.
+The scripted browser check used a no-cache static server and passed thirteen responsive contexts from 320×568 through 2560×1440 with zero console warnings or errors, no external resources, no horizontal overflow, no undersized visible controls, the main region contained within the viewport, the expected page heading visible, the real KartVantage brand asset loaded, and the persistent prototype boundary visible.
 
 - `merchant-overview-desktop.png`: healthy Merchant overview, 1440×1100.
 - `merchant-rules-mobile.png`: conflict Rules view, emulated 390×844.
@@ -32,7 +34,7 @@ The scripted browser check used a no-cache static server and passed four desktop
 - `operations-incident-desktop.png`: internal Operations incident view, 1440×1100.
 - `browser-validation.json`: machine-readable assertions for all four captures.
 
-The browser captures listed above were regenerated after the compact visual revision and are the current evidence set.
+The four browser captures listed above were regenerated after the compact visual revision and are the current visual evidence set. The machine-readable matrix additionally covers 320, 360, 390, 430, 768, 820, 1024, 1280, 1440, 1920, and 2560-pixel viewport widths across merchant and operations routes.
 
 Interactive browser checks also passed:
 

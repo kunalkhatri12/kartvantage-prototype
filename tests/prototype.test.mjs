@@ -69,3 +69,15 @@ test("prototype exposes exceptional and accessibility states", () => {
   assert.match(appSource, /aria-modal="true"/);
   assert.match(appSource, /Skip to content/);
 });
+
+test("role navigation stays minimal while approved secondary pages remain reachable", () => {
+  const merchantMenu = appSource.slice(appSource.indexOf("const merchantNav"), appSource.indexOf("const opsNav"));
+  for (const label of ["Overview", "Rules", "Test Lab", "Storefront", "Health", "Help"]) assert.match(merchantMenu, new RegExp(`"${label}"`));
+  for (const label of ["Activity", "Plans", "Settings"]) assert.doesNotMatch(merchantMenu, new RegExp(`"${label}"`));
+  assert.match(appSource, /button\("Activity", "go-activity"/);
+  assert.match(appSource, /button\("Plan", "go-plans"/);
+  assert.match(appSource, /button\("Settings", "go-settings"/);
+  const operationsMenu = appSource.slice(appSource.indexOf("const opsNav"), appSource.indexOf("const scenarios"));
+  assert.doesNotMatch(operationsMenu, /"Billing"/);
+  assert.match(appSource, /button\("Billing inspection", "ops-billing"/);
+});

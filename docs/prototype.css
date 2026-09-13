@@ -1117,9 +1117,9 @@
   .kv-prototype .kv-prototype-bar,
   .kv-prototype .prototype-bar { grid-template-columns: minmax(0, 1fr) auto; }
   .kv-prototype .kv-prototype-bar__notice,
-  .kv-prototype .prototype-bar__notice { width: auto; }
+  .kv-prototype .prototype-bar__notice { width: 100%; grid-column: 1 / -1; }
   .kv-prototype .kv-prototype-bar__notice strong { white-space: nowrap; }
-  .kv-prototype .kv-prototype-bar__notice span { display: inline; overflow: hidden; font-size: .68rem; text-overflow: ellipsis; white-space: nowrap; }
+  .kv-prototype .kv-prototype-bar__notice span { display: inline; overflow: visible; font-size: .68rem; text-overflow: clip; white-space: normal; }
   .kv-prototype .kv-prototype-controls,
   .kv-prototype .prototype-controls { display: grid; width: 100%; grid-column: 1 / -1; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto; }
   .kv-prototype .kv-prototype-bar label,

@@ -63,21 +63,24 @@
     const ops = parts[0] === "app" && parts[1] === "ops";
     if (ops) {
       const section=parts[2]||"";
-      if(section==="merchant") return {ops:true,page:"merchant-360",id:parts[3]};
-      if(section==="support"&&parts[3]) return {ops:true,page:"support-case",id:parts[3]};
-      return {ops:true,page:({"":"ops-overview",merchants:"ops-merchants",support:"ops-support",publishes:"ops-publishing",publishing:"ops-publishing",jobs:"ops-jobs",incidents:"ops-incidents",releases:"ops-releases",flags:"ops-flags",audit:"ops-audit",privacy:"ops-privacy",billing:"ops-billing"})[section]||"ops-overview",id:parts[3]};
+      if(section==="merchant") return parts[3]&&(DATA.merchants||[]).some(x=>x.id===parts[3]) ? {ops:true,page:"merchant-360",id:parts[3]} : {ops:true,page:"ops-merchants",canonicalFallback:"app/ops/merchants"};
+      if(section==="support"&&parts[3]) return (DATA.supportCases||[]).some(x=>x.id===parts[3]) ? {ops:true,page:"support-case",id:parts[3]} : {ops:true,page:"ops-support",canonicalFallback:"app/ops/support"};
+      const page=({"":"ops-overview",overview:"ops-overview",merchants:"ops-merchants",support:"ops-support",publishes:"ops-publishing",publishing:"ops-publishing",jobs:"ops-jobs",incidents:"ops-incidents",releases:"ops-releases",flags:"ops-flags",audit:"ops-audit",privacy:"ops-privacy",billing:"ops-billing"})[section];
+      return {ops:true,page:page||"ops-overview",id:parts[3],canonicalFallback:page?null:"app/ops/overview"};
     }
     const section=parts[1]||"";
     if(section==="onboarding") return {ops:false,page:"onboarding"};
     if(section==="rules"&&parts[2]==="new") return {ops:false,page:"rule-new",id:parts[3]};
+    if(section==="rules"&&parts[2]&&!state.rules.some(x=>x.id===parts[2])) return {ops:false,page:"rules",canonicalFallback:"app/rules"};
     if(section==="rules"&&parts[3]==="conflict") return {ops:false,page:"conflicts",id:parts[2]};
     if(section==="rules"&&parts[3]==="test") return {ops:false,page:"rule-test",id:parts[2]};
     if(section==="rules"&&parts[3]==="review") return {ops:false,page:"rule-review",id:parts[2]};
     if(section==="rules"&&parts[3]==="publish") return {ops:false,page:"publish",id:parts[2]};
-    if(section==="rules"&&parts[2]) return {ops:false,page:"rule-detail",id:parts[2]};
+    if(section==="rules"&&parts[2]) return parts[3] ? {ops:false,page:"rule-detail",id:parts[2],canonicalFallback:`app/rules/${parts[2]}`} : {ops:false,page:"rule-detail",id:parts[2]};
     if(section==="storefront"&&parts[2]==="preview") return {ops:false,page:"shopper-preview"};
     if(section==="settings"&&parts[2]==="privacy") return {ops:false,page:"privacy"};
-    return {ops:false,page:section||"overview"};
+    const page=({"":"overview",overview:"overview",rules:"rules","test-lab":"test-lab",storefront:"storefront",health:"health",activity:"activity",help:"help",plans:"plans",settings:"settings"})[section];
+    return {ops:false,page:page||"overview",canonicalFallback:page?null:"app/overview"};
   }
   function go(path) { location.hash = path.startsWith("/") ? path : `/${path}`; }
   function badge(label, tone) { return `<span class="kv-badge kv-badge--${tone || String(label).toLowerCase().replace(/\s+/g, "-")}">${esc(label)}</span>`; }
@@ -104,6 +107,7 @@
   function render() {
     const r = route();
     const forcedOps = state.role !== "Merchant";
+    if (r.canonicalFallback) { go(r.canonicalFallback); return; }
     if (forcedOps && !r.ops) { go("app/ops/overview"); return; }
     if (!forcedOps && r.ops) { go("app/overview"); return; }
     const nav = r.ops ? opsNav : merchantNav;

@@ -1,7 +1,42 @@
 {
-  "checkedAt": "2026-09-14T07:26:09.352Z",
+  "checkedAt": "2026-09-14T08:08:24.239Z",
   "base": "http://127.0.0.1:4175/",
   "checks": [
+    {
+      "name": "route-inventory",
+      "status": "PASS",
+      "facts": {
+        "routes": 32
+      }
+    },
+    {
+      "name": "unknown-route-canonicalization",
+      "status": "PASS",
+      "facts": {
+        "merchantFallback": {
+          "hash": "#/app/overview",
+          "heading": "Overview",
+          "title": "Overview · KartVantage Prototype"
+        },
+        "operationsFallback": {
+          "hash": "#/app/ops/overview",
+          "heading": "Operations overview",
+          "title": "Operations · KartVantage Prototype"
+        },
+        "ruleFallback": {
+          "hash": "#/app/rules",
+          "heading": "Rules"
+        },
+        "merchantRecordFallback": {
+          "hash": "#/app/ops/merchants",
+          "heading": "Merchants"
+        },
+        "supportRecordFallback": {
+          "hash": "#/app/ops/support",
+          "heading": "Support cases"
+        }
+      }
+    },
     {
       "name": "deep-link",
       "status": "PASS",

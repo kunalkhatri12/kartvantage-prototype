@@ -48,6 +48,17 @@ test("primary actions use canonical hash routes", () => {
   assert.match(appSource, /name === "shopper-preview"\) return go\("app\/storefront\/preview"\)/);
 });
 
+test("unknown base routes return to the canonical role home", () => {
+  assert.match(appSource, /canonicalFallback:page\?null:"app\/ops\/overview"/);
+  assert.match(appSource, /canonicalFallback:page\?null:"app\/overview"/);
+  assert.match(appSource, /if \(r\.canonicalFallback\) \{ go\(r\.canonicalFallback\); return; \}/);
+  assert.match(appSource, /canonicalFallback:"app\/ops\/merchants"/);
+  assert.match(appSource, /canonicalFallback:"app\/ops\/support"/);
+  assert.match(appSource, /canonicalFallback:"app\/rules"/);
+  assert.match(appSource, /overview:"ops-overview"/);
+  assert.match(appSource, /overview:"overview"/);
+});
+
 test("operations links address fixture-backed merchants and cases", () => {
   assert.match(appSource, /merchant:m-uncertain/);
   assert.match(appSource, /merchant:m-theme/);

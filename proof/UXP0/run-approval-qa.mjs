@@ -64,6 +64,44 @@ try {
   const checks = [];
   const record = (name, facts, pass) => { if (!pass) throw new Error(`${name} failed: ${JSON.stringify(facts)}`); checks.push({ name, status: "PASS", facts }); };
 
+  const routeMatrix = [
+    ["merchant", "app/overview", "Overview"], ["merchant", "app/onboarding", "Get started"], ["merchant", "app/rules", "Rules"],
+    ["merchant", "app/rules/new", "Choose a rule"], ["merchant", "app/rules/new/configure?type=minimum-order", "Configure rule"],
+    ["merchant", "app/rules/r02", "Edit rule"], ["merchant", "app/rules/r02/test", "Test saved draft"],
+    ["merchant", "app/rules/r02/review", "Review rule"], ["merchant", "app/rules/r02/publish", "Publish rule"],
+    ["merchant", "app/rules/r02/conflict", "Resolve conflicts"], ["merchant", "app/test-lab", "Test Lab"],
+    ["merchant", "app/storefront", "Storefront guidance"], ["merchant", "app/storefront/preview", "Shopper preview"],
+    ["merchant", "app/health", "Store health"], ["merchant", "app/activity", "Activity"], ["merchant", "app/help", "Help & support"],
+    ["merchant", "app/plans", "Plans"], ["merchant", "app/settings", "Settings"], ["merchant", "app/settings/privacy", "Privacy and data"],
+    ["operations", "app/ops/overview", "Operations overview"], ["operations", "app/ops/merchants", "Merchants"],
+    ["operations", "app/ops/merchant/m-uncertain", "Paper Kite Demo"], ["operations", "app/ops/support", "Support cases"],
+    ["operations", "app/ops/support/case-302", "Publish still says confirming"], ["operations", "app/ops/publishes", "Publish operations"],
+    ["operations", "app/ops/jobs", "Jobs & webhooks"], ["operations", "app/ops/incidents", "Incidents"],
+    ["operations", "app/ops/releases", "Releases"], ["operations", "app/ops/flags", "Feature flags"],
+    ["operations", "app/ops/audit", "Audit & evidence"], ["operations", "app/ops/privacy", "Privacy operations"],
+    ["operations", "app/ops/billing", "Billing inspection"],
+  ];
+  const routeFacts = [];
+  for (const [role, path, heading] of routeMatrix) {
+    await navigate(`?role=${role}&scenario=healthy#/${path}`);
+    const fact = await value(`({path:${JSON.stringify(path)},heading:document.querySelector('h1')?.textContent,h1Count:document.querySelectorAll('h1').length,boundary:document.querySelector('.kv-prototype-bar')?.textContent})`);
+    routeFacts.push(fact);
+    if (fact.heading !== heading || fact.h1Count !== 1 || !/No Shopify or customer data is changed/.test(fact.boundary || "")) throw new Error(`route-inventory failed: ${JSON.stringify(fact)}`);
+  }
+  record("route-inventory", { routes: routeFacts.length }, routeFacts.length === routeMatrix.length);
+
+  await navigate("?role=merchant&scenario=healthy#/app/not-a-page");
+  const merchantFallback = await value(`({hash:location.hash,heading:document.querySelector('h1')?.textContent,title:document.title})`);
+  await navigate("?role=operations&scenario=healthy#/app/ops/not-a-page");
+  const operationsFallback = await value(`({hash:location.hash,heading:document.querySelector('h1')?.textContent,title:document.title})`);
+  await navigate("?role=merchant&scenario=healthy#/app/rules/not-a-rule/test");
+  const ruleFallback = await value(`({hash:location.hash,heading:document.querySelector('h1')?.textContent})`);
+  await navigate("?role=operations&scenario=healthy#/app/ops/merchant/not-a-merchant");
+  const merchantRecordFallback = await value(`({hash:location.hash,heading:document.querySelector('h1')?.textContent})`);
+  await navigate("?role=support&scenario=healthy#/app/ops/support/not-a-case");
+  const supportRecordFallback = await value(`({hash:location.hash,heading:document.querySelector('h1')?.textContent})`);
+  record("unknown-route-canonicalization", { merchantFallback, operationsFallback, ruleFallback, merchantRecordFallback, supportRecordFallback }, merchantFallback.hash === "#/app/overview" && merchantFallback.heading === "Overview" && /^Overview/.test(merchantFallback.title) && operationsFallback.hash === "#/app/ops/overview" && operationsFallback.heading === "Operations overview" && /^Operations/.test(operationsFallback.title) && ruleFallback.hash === "#/app/rules" && ruleFallback.heading === "Rules" && merchantRecordFallback.hash === "#/app/ops/merchants" && merchantRecordFallback.heading === "Merchants" && supportRecordFallback.hash === "#/app/ops/support" && supportRecordFallback.heading === "Support cases");
+
   await navigate("?role=merchant&scenario=healthy#/app/rules/r02/test");
   const deepLink = await value(`({heading:document.querySelector('h1')?.textContent,role:new URL(location.href).searchParams.get('role'),scenario:new URL(location.href).searchParams.get('scenario')})`);
   record("deep-link", deepLink, deepLink.heading === "Test saved draft" && deepLink.role === "merchant" && deepLink.scenario === "healthy");

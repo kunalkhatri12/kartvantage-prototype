@@ -1,10 +1,10 @@
 # UXP0 approval hardening evidence
 
-Verified: 2026-09-14 12:52 Asia/Kolkata
+Verified: 2026-09-14 13:34 Asia/Kolkata
 
 ## Verdict
 
-PASS after correcting one publish-dialog interaction defect. UXP0 now has a stakeholder walkthrough, objective decision rubric, privacy-safe feedback template, local-agent reconciliation, 26 passing repository tests, 11 additional browser checks, and a visible trusted-input verification of the uncertain publication path.
+PASS after correcting a publish-dialog interaction defect and misleading invalid-route fallbacks. UXP0 now has a stakeholder walkthrough, objective decision rubric, privacy-safe feedback template, local-agent reconciliation, 27 passing repository tests, 13 browser checks, a 32-route inventory, five invalid-link recovery cases, and a visible trusted-input verification of the uncertain publication path.
 
 This work changes prototype behavior only. It creates no production model, Shopify write, theme mutation, billing action, Render resource, or C2 authorization.
 
@@ -16,7 +16,7 @@ This work changes prototype behavior only. It creates no production model, Shopi
 | Copy/accessibility audit | `shopify-fast:latest` | 2026-09-14 06:45:09 | 24.0s | 4,956 | 750 | Accepted selectively; inaccurate terminology rejected |
 | Prototype test-gap review | `qwen3-coder:30b` | 2026-09-14 06:45:37 | 57.0s | 4,916 | 1,019 | Accepted selectively; production-only claims deferred |
 
-Codex independently reconciled every report. Raw reports and manifests remain local and are not published.
+Exact reconciliation: `control/UXP0_APPROVAL_RECONCILIATION.md`. Raw reports and manifests remain ignored under `.agent/runs/`.
 
 ## Defect and correction
 
@@ -59,16 +59,28 @@ Observed final dialog:
 - Message: `Reconciling evidence. The rule is not active yet.`
 - The rule did not become published.
 
+At 2026-09-14 13:03 Asia/Kolkata, the same corrected path was repeated against the public GitHub Pages deployment. The visible public dialog again ended at `Confirmation delayed` with `Reconciling evidence. The rule is not active yet.`
+
+## Public release evidence
+
+- Public prototype: `https://kunalkhatri12.github.io/kartvantage-prototype/`
+- Public source: `https://github.com/kunalkhatri12/kartvantage-prototype`
+- Published approval-hardening commit: `be7d4f6`
+- GitHub Pages workflow: `https://github.com/kunalkhatri12/kartvantage-prototype/actions/runs/34817901365` — PASS in 18 seconds.
+- C1 quality workflow: `https://github.com/kunalkhatri12/kartvantage-prototype/actions/runs/34817901364` — PASS in 28 seconds.
+- Live public uncertain-publication walkthrough: PASS; the rule remained inactive.
+- Google control dashboard: synchronized and read-back verified at 2026-09-14 13:08 Asia/Kolkata.
+
 ## Repository gate
 
 - Lint: PASS.
 - Typecheck: PASS.
-- Tests: PASS, 26/26.
+- Tests: PASS, 27/27.
 - Production build: PASS.
-- Browser approval audit: PASS, 11/11 with zero console problems.
+- Browser approval audit: PASS, 13/13 with zero console problems, including 32 valid routes and five invalid-link recovery cases.
+- Route/link evidence: `proof/UXP0/ROUTE_LINK_AUDIT.md`.
 - Known React Router v8 future-flag notices remain non-blocking.
 
 ## Remaining gate
 
 CMO Umesh and the owner must still approve UXP0. This evidence does not authorize C2 or external infrastructure changes.
-

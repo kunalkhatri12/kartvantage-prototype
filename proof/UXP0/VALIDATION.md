@@ -60,6 +60,7 @@ Rule-flow QA also found and corrected two display/logic defects before publicati
 - Pages workflow: `https://github.com/kunalkhatri12/kartvantage-prototype/actions/runs/34771608915`.
 - GitHub Pages uses GitHub Actions with HTTPS enforced; rerun attempt 2 passed after the new repository's Pages setting was enabled.
 - Live QA reconfirmed the complete selected-rule configure → test → review → simulated-publish journey, contextual navigation, persistent simulation disclaimer, and zero browser console warnings/errors.
+
 ## Local model usage
 
 - `qwen3-coder:30b`: product blueprint; accepted after Codex reconciliation.
@@ -70,3 +71,19 @@ Rule-flow QA also found and corrected two display/logic defects before publicati
 ## Remaining gate
 
 CMO Umesh approval and owner acceptance remain required. Render creation and production implementation remain stopped.
+
+## Approval hardening — 2026-09-14
+
+Three further bounded local reviews covered stakeholder approval, merchant copy/accessibility, and prototype test gaps. Codex accepted only evidence-backed recommendations and rejected claims that the demonstration role switcher proves authorization, that Preview should replace explicit lifecycle states, or that prototype uncertainty proves network/rollback behavior.
+
+The expanded browser audit found and corrected a publish-dialog event-delegation defect: selecting an outcome could inherit the backdrop close action. Modal backdrop closure is now limited to a direct backdrop click, explicit buttons/links own modal actions, and the selected deterministic outcome is recorded before confirmation. A regression test protects the interaction boundary.
+
+Updated verification:
+
+- Repository tests: 26/26 passed.
+- Approval browser checks: 11/11 passed with zero console problems.
+- Verified: deep links, role/scenario URL and refresh persistence, dialog labelling/focus restoration/focus trap, reduced motion, narrow reflow proxy, and uncertain publication remaining unpublished.
+- A visible trusted-input walkthrough confirmed `Uncertain / reconciling` ends at `Confirmation delayed` with `The rule is not active yet.`
+- Lint, typecheck, and production build passed.
+
+Evidence: `proof/UXP0/APPROVAL_HARDENING.md` and `proof/UXP0/approval-browser-validation.json`.

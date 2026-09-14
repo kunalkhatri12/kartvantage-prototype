@@ -1,0 +1,116 @@
+{
+  "checkedAt": "2026-09-14T07:26:09.352Z",
+  "base": "http://127.0.0.1:4175/",
+  "checks": [
+    {
+      "name": "deep-link",
+      "status": "PASS",
+      "facts": {
+        "heading": "Test saved draft",
+        "role": "merchant",
+        "scenario": "healthy"
+      }
+    },
+    {
+      "name": "role-scenario-url-sync",
+      "status": "PASS",
+      "facts": {
+        "url": "http://127.0.0.1:4175/?role=operations&scenario=incident#/app/ops/overview",
+        "heading": "Operations overview"
+      }
+    },
+    {
+      "name": "refresh-persistence",
+      "status": "PASS",
+      "facts": {
+        "role": "Operations",
+        "scenario": "Incident",
+        "heading": "Operations overview"
+      }
+    },
+    {
+      "name": "modal-focus-restoration",
+      "status": "PASS",
+      "facts": {
+        "dialogFocused": true,
+        "labelled": true,
+        "restored": true,
+        "closed": true
+      }
+    },
+    {
+      "name": "modal-focus-trap",
+      "status": "PASS",
+      "facts": {
+        "forward": true,
+        "backward": true
+      }
+    },
+    {
+      "name": "reduced-motion",
+      "status": "PASS",
+      "facts": {
+        "matches": true,
+        "transition": "1e-05s",
+        "animation": "1e-05s"
+      }
+    },
+    {
+      "name": "two-hundred-percent-reflow-proxy",
+      "status": "PASS",
+      "facts": {
+        "overflow": false,
+        "heading": "Storefront guidance",
+        "small": 0
+      }
+    },
+    {
+      "name": "uncertain-outcome-selection",
+      "status": "PASS",
+      "facts": {
+        "checked": true,
+        "selected": "uncertain",
+        "stored": "uncertain",
+        "dialog": true
+      }
+    },
+    {
+      "name": "uncertain-publication-started",
+      "status": "PASS",
+      "facts": {
+        "publishState": "validating",
+        "dialog": false,
+        "activity": "Approval uncertainty publish requested — simulated"
+      }
+    },
+    {
+      "name": "uncertain-publication",
+      "status": "PASS",
+      "facts": {
+        "selectedOutcome": {
+          "checked": true,
+          "selected": "uncertain",
+          "stored": "uncertain",
+          "dialog": true
+        },
+        "publishStarted": {
+          "publishState": "validating",
+          "dialog": false,
+          "activity": "Approval uncertainty publish requested — simulated"
+        },
+        "ruleStatus": "draft",
+        "publishState": "uncertain",
+        "heading": "Confirmation delayed",
+        "copy": "Confirmation delayedReconciling evidence. The rule is not active yet.Cancel"
+      }
+    },
+    {
+      "name": "console",
+      "status": "PASS",
+      "facts": {
+        "problems": []
+      }
+    }
+  ],
+  "consoleProblems": []
+}

@@ -96,3 +96,12 @@ test("rule journey preserves the selected draft from configuration through publi
   assert.match(appSource, /Changes explanation order, never enforcement truth/);
   assert.match(appSource, /Final confirmation after configuration, saved-draft tests, and review/);
 });
+
+test("publish dialog choices do not inherit the backdrop close action", () => {
+  assert.match(appSource, /if\(e\.target\.matches\(\"\.kv-modal-backdrop\"\)\) return closeModal\(\)/);
+  assert.match(appSource, /closest\(\"button\[data-action\], a\[data-action\]\"\)/);
+  assert.match(appSource, /e\.target\.matches\('input\[name=\"publish-result\"\]'\).*modalRoot\.dataset\.publishResult=e\.target\.value/);
+  assert.doesNotMatch(appSource, /modalRoot\.addEventListener\(\"click\", e => \{ if\(e\.target\.matches\(\"\.kv-modal-backdrop\"\)\) closeModal\(\); const t=e\.target\.closest\(\"\[data-action\]\"\)/);
+  assert.match(appSource, /modalRoot\.dataset\.publishResult=e\.target\.value/);
+  assert.match(appSource, /modalRoot\.dataset\.publishResult\|\|modalRoot\.querySelector/);
+});

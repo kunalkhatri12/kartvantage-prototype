@@ -95,6 +95,7 @@
   }
   function modal(title, body, confirmAction, confirmLabel) {
     lastFocus = document.activeElement;
+    delete modalRoot.dataset.publishResult;
     modalRoot.innerHTML = `<div class="kv-modal-backdrop" data-action="close-modal"><section class="kv-modal" role="dialog" aria-modal="true" aria-labelledby="kv-modal-title" tabindex="-1" data-modal-panel><h2 id="kv-modal-title">${esc(title)}</h2><div>${body}</div><div class="kv-actions">${button("Cancel", "close-modal", "secondary")}${confirmAction ? button(confirmLabel || "Confirm simulation", confirmAction, "primary") : ""}</div></section></div>`;
     modalRoot.querySelector(".kv-modal").focus();
   }
@@ -320,7 +321,7 @@
     if (name === "reset-demo") return modal("Reset prototype?", "<p>This clears only fictional, session-local changes. Shopify and customer data are never touched.</p>", "confirm-reset", "Reset demo");
     if (name === "confirm-reset") { sessionStorage.removeItem("kv-prototype-state"); state=Object.assign({},defaults,{rules:baseRules.map(x=>Object.assign({},x)),activity:[]}); closeModal(); go("app/overview"); render(); toast("Prototype reset. No external data changed."); return; }
     if (name === "publish") { const rule=state.rules.find(x=>x.id===id); const candidate=state.rules.map(x=>x.id===id?Object.assign({},x,{status:"publishing"}):x); if (findConflicts(candidate).length || state.scenario==="Conflict") return go(`app/rules/${id}/conflict`); state.publishState="requested"; modal("Simulate publication",publishPanel(rule),`confirm-publish:${id}`,"Run simulation"); return; }
-    if (name === "confirm-publish") { const choice=modalRoot.querySelector('input[name="publish-result"]:checked')?.value||"confirmed"; closeModal(); simulatePublish(id,choice); return; }
+    if (name === "confirm-publish") { const choice=modalRoot.dataset.publishResult||modalRoot.querySelector('input[name="publish-result"]:checked')?.value||"confirmed"; closeModal(); simulatePublish(id,choice); return; }
     if (name === "toggle-rule") { const r=state.rules.find(x=>x.id===id); r.status=r.status==="paused"?"published":"paused"; activity(`${r.name} ${r.status} — simulated`,"Changed"); render(); toast(`Rule ${r.status} in the demo.`); return; }
     if (name === "archive-rule") return modal("Archive this rule?", "<p>Archived rules stop participating in prototype tests. This cannot affect Shopify.</p>", `confirm-archive:${id}`, "Archive simulation");
     if (name === "confirm-archive") { const r=state.rules.find(x=>x.id===id); r.status="archived"; activity(`${r.name} archived — simulated`); closeModal(); render(); toast("Rule archived in the demo."); return; }
@@ -349,7 +350,15 @@
   }
 
   root.addEventListener("click", e => { const t=e.target.closest("[data-action]"); if(t) handleAction(t.dataset.action,t); });
-  modalRoot.addEventListener("click", e => { if(e.target.matches(".kv-modal-backdrop")) closeModal(); const t=e.target.closest("[data-action]"); if(t) handleAction(t.dataset.action,t); });
+  modalRoot.addEventListener("click", e => {
+    if(e.target.matches('input[name="publish-result"]')) { modalRoot.dataset.publishResult=e.target.value; return; }
+    if(e.target.matches(".kv-modal-backdrop")) return closeModal();
+    const t=e.target.closest("button[data-action], a[data-action]");
+    if(t) handleAction(t.dataset.action,t);
+  });
+  modalRoot.addEventListener("change", e => {
+    if(e.target.matches('input[name="publish-result"]')) modalRoot.dataset.publishResult=e.target.value;
+  });
   document.addEventListener("keydown", e => { if(e.key==="Escape"&&modalRoot.innerHTML)closeModal(); if(e.key==="Tab"&&modalRoot.innerHTML){const focusable=[...modalRoot.querySelectorAll('button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[href],[tabindex]:not([tabindex="-1"])')];if(!focusable.length)return;const first=focusable[0],last=focusable[focusable.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}} });
   root.addEventListener("change", e => {
     const c=e.target.dataset.control;

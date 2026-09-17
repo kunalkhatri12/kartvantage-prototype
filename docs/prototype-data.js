@@ -146,6 +146,16 @@
       { id: "billing-address-policy", code: "F04", label: "Billing-address policies", availability: "unavailable", description: "Future preview; evidence and scope are not approved." },
     ],
 
+    resourceCatalog: [
+      { id: "gid://shopify/Product/1001", type: "product", title: "Midnight Roast 1 kg", subtitle: "3 variants · Active", handle: "midnight-roast-1kg", initials: "MR" },
+      { id: "gid://shopify/Product/1002", type: "product", title: "Classic Coffee Bundle", subtitle: "5 variants · Active", handle: "classic-coffee-bundle", initials: "CB" },
+      { id: "gid://shopify/Product/1003", type: "product", title: "Seasonal Gift Box", subtitle: "2 variants · Draft", handle: "seasonal-gift-box", initials: "SG" },
+      { id: "gid://shopify/Product/1004", type: "product", title: "Espresso Tasting Set", subtitle: "4 variants · Active", handle: "espresso-tasting-set", initials: "ET" },
+      { id: "gid://shopify/Collection/2001", type: "collection", title: "Coffee essentials", subtitle: "12 products · Manual", handle: "coffee-essentials", initials: "CE" },
+      { id: "gid://shopify/Collection/2002", type: "collection", title: "Gift-ready bundles", subtitle: "8 products · Automated", handle: "gift-ready-bundles", initials: "GB" },
+      { id: "gid://shopify/Collection/2003", type: "collection", title: "Limited releases", subtitle: "6 products · Manual", handle: "limited-releases", initials: "LR" },
+    ],
+
     rules: [
       { id: "r01", code: "R01", name: "Wholesale basket minimum", type: "minimum-order", status: "published", value: 5000, currency: "INR", scope: "All products", priority: 20, messageOrder: 2, message: "Add {{remainingAmount}} more to continue to checkout.", updatedAt: "2026-09-13T09:45:00+05:30", version: 4 },
       { id: "r02", code: "R02", name: "Order value cap", type: "maximum-order", status: "draft", value: 4000, currency: "INR", scope: "All products", priority: 10, messageOrder: 1, message: "Reduce your cart by {{excessAmount}} to continue.", updatedAt: "2026-09-13T10:02:00+05:30", version: 2, conflictWith: ["r01"] },

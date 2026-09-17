@@ -82,9 +82,11 @@ test("prototype exposes exceptional and accessibility states", () => {
 });
 
 test("role navigation stays minimal while approved secondary pages remain reachable", () => {
-  const merchantMenu = appSource.slice(appSource.indexOf("const merchantNav"), appSource.indexOf("const opsNav"));
-  for (const label of ["Overview", "Rules", "Test Lab", "Storefront", "Health", "Help"]) assert.match(merchantMenu, new RegExp(`"${label}"`));
-  for (const label of ["Activity", "Plans", "Settings"]) assert.doesNotMatch(merchantMenu, new RegExp(`"${label}"`));
+  const merchantMenu = appSource.slice(appSource.indexOf("const merchantNav"), appSource.indexOf("const merchantMoreNav"));
+  for (const label of ["Overview", "Rules", "Rule Test Lab", "Storefront", "Insights", "Health & Activity"]) assert.match(merchantMenu, new RegExp(`"${label}"`));
+  const merchantMoreMenu = appSource.slice(appSource.indexOf("const merchantMoreNav"), appSource.indexOf("const opsNav"));
+  for (const label of ["Help", "Plans", "Settings", "Privacy & data"]) assert.match(merchantMoreMenu, new RegExp(`"${label}"`));
+  assert.match(appSource, /View more/);
   assert.match(appSource, /button\("Activity", "go-activity"/);
   assert.match(appSource, /button\("Plan", "go-plans"/);
   assert.match(appSource, /button\("Settings", "go-settings"/);
@@ -96,7 +98,7 @@ test("role navigation stays minimal while approved secondary pages remain reacha
 test("rule journey preserves the selected draft from configuration through publication", () => {
   assert.match(appSource, /app\/rules\/\$\{id\}\/test/);
   assert.match(appSource, /app\/rules\/\$\{id\}\/review/);
-  assert.match(appSource, /Save draft and continue/);
+  assert.match(appSource, /Save draft and test/);
   assert.match(appSource, /Run three-case test/);
   assert.match(appSource, /Below, exact, and above-boundary cases/);
   assert.match(appSource, /testEvidence\?\.passed/);

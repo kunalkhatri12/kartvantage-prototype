@@ -82,11 +82,9 @@ test("prototype exposes exceptional and accessibility states", () => {
 });
 
 test("role navigation stays minimal while approved secondary pages remain reachable", () => {
-  const merchantMenu = appSource.slice(appSource.indexOf("const merchantNav"), appSource.indexOf("const merchantMoreNav"));
-  for (const label of ["Overview", "Rules", "Rule Test Lab", "Storefront", "Insights", "Health & Activity"]) assert.match(merchantMenu, new RegExp(`"${label}"`));
-  const merchantMoreMenu = appSource.slice(appSource.indexOf("const merchantMoreNav"), appSource.indexOf("const opsNav"));
-  for (const label of ["Help", "Plans", "Settings", "Privacy & data"]) assert.match(merchantMoreMenu, new RegExp(`"${label}"`));
-  assert.match(appSource, /View more/);
+  const merchantMenu = appSource.slice(appSource.indexOf("const merchantNav"), appSource.indexOf("const opsNav"));
+  for (const label of ["Overview", "Rules", "Rule Test Lab", "Storefront", "Insights", "Health & Activity", "Help", "Plans", "Settings", "Privacy & data"]) assert.match(merchantMenu, new RegExp(`"${label}"`));
+  assert.doesNotMatch(appSource, /View more/);
   assert.match(appSource, /button\("Activity", "go-activity"/);
   assert.match(appSource, /button\("Plan", "go-plans"/);
   assert.match(appSource, /button\("Settings", "go-settings"/);

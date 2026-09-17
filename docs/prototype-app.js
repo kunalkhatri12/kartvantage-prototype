@@ -10,9 +10,9 @@
 
   const merchantNav = [
     ["overview", "Overview", "app"], ["rules", "Rules", "app/rules"], ["test-lab", "Rule Test Lab", "app/test-lab"],
-    ["storefront", "Storefront", "app/storefront"], ["insights", "Insights", "app/insights"], ["health", "Health & Activity", "app/health"]
+    ["storefront", "Storefront", "app/storefront"], ["insights", "Insights", "app/insights"], ["health", "Health & Activity", "app/health"],
+    ["help", "Help", "app/help"], ["plans", "Plans", "app/plans"], ["settings", "Settings", "app/settings"], ["privacy", "Privacy & data", "app/settings/privacy"]
   ];
-  const merchantMoreNav = [["help", "Help", "app/help"], ["plans", "Plans", "app/plans"], ["settings", "Settings", "app/settings"], ["privacy", "Privacy & data", "app/settings/privacy"]];
   const opsNav = [
     ["ops-overview", "Operations", "app/ops"], ["ops-merchants", "Merchants", "app/ops/merchants"], ["ops-support", "Support", "app/ops/support"],
     ["ops-publishing", "Publishing", "app/ops/publishes"], ["ops-jobs", "Jobs & webhooks", "app/ops/jobs"], ["ops-incidents", "Incidents", "app/ops/incidents"],
@@ -34,7 +34,7 @@
     publishState: "idle", dirty: false, storefrontActive: true, search: "", uiState: "ready",
     ruleFilter: "all", selectedMerchant: null, supportCase: null, pickerSelections: {},
     storefrontSettings: { layout: "card", accent: "lime", cartPage: true, productPage: false, guideMode: "progress-and-summary" },
-    storefrontDirty: false, previewSurface: "cart", moreNavOpen: false
+    storefrontDirty: false, previewSurface: "cart"
   };
   let state = restore();
   let lastFocus = null;
@@ -136,10 +136,9 @@
     if (r.ops) {
       return `<div class="kv-admin-nav__section"><p>KartVantage control</p>${nav.map(([id, label, path]) => `<a href="#/${path}" ${r.page === id ? 'aria-current="page"' : ""}><span class="kv-admin-nav__icon" aria-hidden="true">${id === "ops-overview" ? "⌂" : "·"}</span><span>${esc(label)}</span></a>`).join("")}</div>`;
     }
-    const moreActive = merchantMoreNav.some(([id]) => r.page === id);
     return `${adminItem("Home", "⌂")}${adminItem("Orders", "▣", "1")}${adminItem("Products", "◆")}${adminItem("Customers", "●")}${adminItem("Growth", "◔")}${adminItem("Discounts", "✣")}${adminItem("Content", "▣")}${adminItem("Markets", "◒")}${adminItem("Finance", "▥")}${adminItem("Analytics", "▥")}
       <div class="kv-admin-nav__section"><p>Sales channels <span aria-hidden="true">›</span></p>${adminItem("Agentic", "⌘")}${adminItem("Online Store", "▧")}</div>
-      <div class="kv-admin-nav__section kv-admin-nav__apps"><p>Apps <span aria-hidden="true">›</span></p><div class="kv-admin-nav__app-title"><img class="kv-brand__logo" src="assets/kartvantage-logo.png" alt=""><span>KartVantage</span></div><nav class="kv-admin-nav__subnav" aria-label="KartVantage pages">${nav.map(([id, label, path]) => `<a href="#/${path}" ${r.page === id ? 'aria-current="page"' : ""}>${esc(label)}</a>`).join("")}<button type="button" class="kv-admin-nav__more${moreActive ? " is-active" : ""}" data-action="toggle-more" aria-expanded="${state.moreNavOpen || moreActive}">View more <span aria-hidden="true">${state.moreNavOpen || moreActive ? "⌃" : "⌄"}</span></button><div class="kv-admin-nav__more-links"${state.moreNavOpen || moreActive ? "" : " hidden"}>${merchantMoreNav.map(([id, label, path]) => `<a href="#/${path}" ${r.page === id ? 'aria-current="page"' : ""}>${esc(label)}</a>`).join("")}</div></nav></div>`;
+      <div class="kv-admin-nav__section kv-admin-nav__apps"><p>Apps <span aria-hidden="true">›</span></p><div class="kv-admin-nav__app-title"><img class="kv-brand__logo" src="assets/kartvantage-logo.png" alt=""><span>KartVantage</span></div><nav class="kv-admin-nav__subnav" aria-label="KartVantage pages">${nav.map(([id, label, path]) => `<a href="#/${path}" ${r.page === id ? 'aria-current="page"' : ""}>${esc(label)}</a>`).join("")}</nav></div>`;
   }
 
   function render() {
@@ -173,7 +172,7 @@
     document.title = `${pageTitle(r)} · KartVantage Prototype`;
     persistUrl();
   }
-  function pageTitle(r) { if (r.page === "rule-new" && r.id === "configure") return "Configure rule"; return (r.ops ? opsNav : merchantNav.concat(merchantMoreNav)).find(x => x[0] === r.page)?.[1] || ({onboarding:"Get started","rule-new":"Choose a rule","rule-detail":"Rule details","rule-test":"Test rule","rule-review":"Review rule",conflicts:"Resolve conflict",publish:"Publish","shopper-preview":"Shopper preview",privacy:"Privacy and data",activity:"Activity",plans:"Plans",settings:"Settings","ops-billing":"Billing","merchant-360":"Merchant 360","support-case":"Support case"})[r.page] || "KartVantage"; }
+  function pageTitle(r) { if (r.page === "rule-new" && r.id === "configure") return "Configure rule"; return (r.ops ? opsNav : merchantNav).find(x => x[0] === r.page)?.[1] || ({onboarding:"Get started","rule-new":"Choose a rule","rule-detail":"Rule details","rule-test":"Test rule","rule-review":"Review rule",conflicts:"Resolve conflict",publish:"Publish","shopper-preview":"Shopper preview",privacy:"Privacy and data",activity:"Activity",plans:"Plans",settings:"Settings","ops-billing":"Billing","merchant-360":"Merchant 360","support-case":"Support case"})[r.page] || "KartVantage"; }
   function persistUrl() {
     const u = new URL(location.href); u.searchParams.set("role", parameterId(state.role)); u.searchParams.set("scenario", parameterId(state.scenario));
     history.replaceState(null, "", `${u.pathname}${u.search}${location.hash}`);
@@ -375,7 +374,6 @@
     const [name, id] = action.split(":");
     const routes = { "new-rule":"app/rules/new", "go-onboarding":"app/onboarding", "go-rules":"app/rules", "go-test":"app/test-lab", "go-storefront":"app/storefront", "go-health":"app/health", "go-activity":"app/activity", "go-plans":"app/plans", "go-settings":"app/settings", "ops-merchants":"app/ops/merchants", "ops-support":"app/ops/support", "ops-publishing":"app/ops/publishes", "ops-billing":"app/ops/billing" };
     if (routes[name]) return go(routes[name]);
-    if (name === "toggle-more") { state.moreNavOpen=!state.moreNavOpen; persist(); render(); return; }
     if (name === "merchant") return go(`app/ops/merchant/${id}`);
     if (name === "toggle-menu") { const shell=root.querySelector(".kv-app-shell"), button=target; const open=shell.dataset.menuOpen!=="true"; shell.dataset.menuOpen=String(open); button.setAttribute("aria-expanded",String(open)); return; }
     if (name === "support-case") return go(`app/ops/support/${id}`);
